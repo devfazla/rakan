@@ -1,0 +1,127 @@
+# Local AI Platform - Model Registry
+# This file contains the registry of available AI models
+
+models:
+  # Qwen2.5-Coder 1.5B Instruct - Small coding model for low-resource systems
+  qwen2.5-coder-1.5b-instruct:
+    display_name: "Qwen2.5-Coder 1.5B Instruct"
+    description: "Small coding-focused model optimized for low-resource systems. Good for basic coding tasks and code understanding."
+    parameters: "1.5B"
+    quantization: "Q4_K_M"
+    architecture: "Qwen2"
+    context_length: 32768
+    file_size_gb: 1.2
+    ram_required_gb: 4
+    recommended_ram_gb: 6
+    download_url: "https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF/resolve/main/qwen2.5-coder-1.5b-instruct-q4_k_m.gguf"
+    checksum: "sha256:PENDING_UPDATE"  # To be updated with actual checksum
+    use_case: "coding"
+    language: "multilingual"
+    license: "apache-2.0"
+    enabled: true
+    tags: ["coding", "small", "fast", "low-resource"]
+    performance_score: 8  # Higher is better for target hardware
+    
+  # Qwen2.5-Coder 3B Instruct - Balanced coding model
+  qwen2.5-coder-3b-instruct:
+    display_name: "Qwen2.5-Coder 3B Instruct"
+    description: "Balanced coding model for general development tasks. Good balance of quality and performance."
+    parameters: "3B"
+    quantization: "Q4_K_M"
+    architecture: "Qwen2"
+    context_length: 32768
+    file_size_gb: 2.1
+    ram_required_gb: 6
+    recommended_ram_gb: 8
+    download_url: "https://huggingface.co/Qwen/Qwen2.5-Coder-3B-Instruct-GGUF/resolve/main/qwen2.5-coder-3b-instruct-q4_k_m.gguf"
+    checksum: "sha256:PENDING_UPDATE"  # To be updated with actual checksum
+    use_case: "coding"
+    language: "multilingual"
+    license: "apache-2.0"
+    enabled: true
+    tags: ["coding", "balanced", "quality", "recommended"]
+    performance_score: 7
+    
+  # Placeholder for future models
+  # qwen2.5-coder-7b-instruct:
+  #   display_name: "Qwen2.5-Coder 7B Instruct"
+  #   description: "High-quality coding model for complex tasks. Requires more resources."
+  #   parameters: "7B"
+  #   quantization: "Q4_K_M"
+  #   architecture: "Qwen2"
+  #   context_length: 32768
+  #   file_size_gb: 4.5
+  #   ram_required_gb: 10
+  #   recommended_ram_gb: 12
+  #   download_url: "https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF/resolve/main/qwen2.5-coder-7b-instruct-q4_k_m.gguf"
+  #   checksum: "sha256:PENDING_UPDATE"
+  #   use_case: "coding"
+  #   language: "multilingual"
+  #   license: "apache-2.0"
+  #   enabled: false  # Disabled for low-resource target
+  #   tags: ["coding", "large", "quality", "high-resource"]
+  #   performance_score: 5
+
+# Model Categories
+categories:
+  coding:
+    description: "Models optimized for coding tasks"
+    models: ["qwen2.5-coder-1.5b-instruct", "qwen2.5-coder-3b-instruct"]
+    
+  general:
+    description: "General purpose models"
+    models: []
+    
+  chat:
+    description: "Models optimized for conversation"
+    models: []
+
+# Hardware Recommendations
+hardware_profiles:
+  low_end:
+    description: "Systems with 4-8GB RAM"
+    recommended_models: ["qwen2.5-coder-1.5b-instruct"]
+    min_ram_gb: 4
+    max_ram_gb: 8
+    
+  mid_range:
+    description: "Systems with 8-16GB RAM"
+    recommended_models: ["qwen2.5-coder-3b-instruct", "qwen2.5-coder-1.5b-instruct"]
+    min_ram_gb: 8
+    max_ram_gb: 16
+    
+  high_end:
+    description: "Systems with 16GB+ RAM"
+    recommended_models: ["qwen2.5-coder-3b-instruct"]
+    min_ram_gb: 16
+    max_ram_gb: null
+
+# Download Mirrors (optional)
+mirrors:
+  primary:
+    name: "Hugging Face"
+    base_url: "https://huggingface.co"
+    
+  # backup:
+  #   name: "Backup Mirror"
+  #   base_url: "https://backup-mirror.example.com"
+
+# Validation Settings
+validation:
+  # Verify checksums after download
+  verify_checksum: true
+  
+  # Test model loading after download
+  test_loading: true
+  
+  # Run basic inference test
+  test_inference: true
+  
+  # Maximum download time (seconds)
+  download_timeout: 3600
+  
+  # Retry attempts for failed downloads
+  retry_attempts: 3
+  
+  # Retry delay (seconds)
+  retry_delay: 5

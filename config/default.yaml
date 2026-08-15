@@ -1,0 +1,241 @@
+# RAKAN - Default Configuration
+# This file contains the default configuration for RAKAN
+
+# Application Settings
+application:
+  name: "RAKAN"
+  version: "0.1.0"
+  author: "DevFazla"
+  website: "https://devfazla.com"
+  social: "@devfazla"
+  debug: false
+  log_level: "INFO"
+  
+# Directory Configuration
+directories:
+  # Base installation directory
+  base_dir: "~/.rakan"
+  
+  # Model storage directory
+  models_dir: "~/.rakan/models"
+  
+  # Configuration directory
+  config_dir: "~/.config/rakan"
+  
+  # Log directory
+  log_dir: "~/.rakan/logs"
+  
+  # Cache directory
+  cache_dir: "~/.rakan/cache"
+  
+  # Temporary directory
+  temp_dir: "~/.rakan/temp"
+
+# Model Configuration
+model:
+  # Default model to use
+  default: "qwen2.5-coder-1.5b-instruct"
+  
+  # Auto-unload models when not in use
+  auto_unload: true
+  
+  # Maximum number of models to keep loaded
+  max_loaded_models: 1
+  
+  # Context size for model inference
+  context_size: 2048
+  
+  # Batch size for processing
+  batch_size: 512
+  
+  # Number of threads to use (auto for CPU count)
+  num_threads: "auto"
+  
+  # Maximum tokens to generate
+  max_tokens: 1024
+  
+  # Temperature for generation (0.0 - 2.0)
+  temperature: 0.7
+  
+  # Top-p sampling
+  top_p: 0.9
+  
+  # Top-k sampling
+  top_k: 40
+
+# Performance Settings
+performance:
+  # Enable memory mapping for model files
+  enable_mmap: true
+  
+  # Enable memory locking (prevent swapping)
+  enable_mlock: false
+  
+  # Enable NUMA support
+  numa: false
+  
+  # GPU layers (0 for CPU-only)
+  n_gpu_layers: 0
+  
+  # Memory fraction to use (0.0 - 1.0)
+  memory_fraction: 0.8
+  
+  # Low resource mode
+  low_resource_mode: true
+
+# llama.cpp Configuration
+llama_cpp:
+  # Path to llama.cpp executable (auto-detect if empty)
+  path: ""
+  
+  # llama.cpp arguments
+  args:
+    # Model file path (set at runtime)
+    model: ""
+    
+    # Context size
+    ctx_size: 2048
+    
+    # Batch size
+    batch_size: 512
+    
+    # Number of threads
+    threads: "auto"
+    
+    # Memory lock
+    mlock: false
+    
+    # Memory map
+    mmap: true
+    
+    # GPU layers
+    n_gpu_layers: 0
+
+# Agent Configuration
+agent:
+  # Maximum conversation history messages
+  max_history_messages: 100
+  
+  # Maximum context files to include
+  max_context_files: 50
+  
+  # Maximum file size to read (bytes)
+  max_file_size: 1000000
+  
+  # Tool execution timeout (seconds)
+  tool_timeout: 30
+  
+  # Maximum parallel tool executions
+  max_parallel_tools: 5
+  
+  # Enable planning mode
+  enable_planning: true
+  
+  # Enable auto-confirmation for safe operations
+  auto_confirm_safe: false
+
+# Memory Configuration
+memory:
+  # Short-term memory (conversation history)
+  short_term:
+    enabled: true
+    max_messages: 100
+    retention_hours: 24
+  
+  # Long-term memory (persistent knowledge)
+  long_term:
+    enabled: false
+    storage_path: "~/.rakan/memory"
+    max_entries: 1000
+
+# Logging Configuration
+logging:
+  # Log level (DEBUG, INFO, WARN, ERROR)
+  level: "INFO"
+  
+  # Log format (text, json)
+  format: "text"
+  
+  # Log to file
+  file:
+    enabled: true
+    path: "~/.rakan/logs/rakan.log"
+    max_size_mb: 10
+    backup_count: 5
+  
+  # Log to console
+  console:
+    enabled: true
+    level: "INFO"
+  
+  # Audit logging for security events
+  audit:
+    enabled: true
+    path: "~/.rakan/logs/audit.log"
+
+# Security Configuration
+security:
+  # Enable permission system
+  enable_permissions: true
+  
+  # Audit log security events
+  audit_log: true
+  
+  # Validate all inputs
+  validate_inputs: true
+  
+  # Enable rate limiting
+  rate_limiting:
+    enabled: true
+    requests_per_minute: 60
+  
+  # Session timeout (seconds)
+  session_timeout: 3600
+
+# Web Server Configuration
+server:
+  # Enable web interface
+  enabled: false
+  
+  # Host to bind to
+  host: "127.0.0.1"
+  
+  # Port to listen on
+  port: 8080
+  
+  # Enable CORS
+  cors:
+    enabled: true
+    origins: ["*"]
+  
+  # Session management
+  sessions:
+    enabled: true
+    secret_key: "change-this-in-production"
+    max_age: 86400
+
+# Update Configuration
+updates:
+  # Check for updates automatically
+  auto_check: true
+  
+  # Check interval (hours)
+  check_interval: 24
+  
+  # Update channel (stable, beta, dev)
+  channel: "stable"
+
+# Telemetry Configuration
+telemetry:
+  # Enable anonymous telemetry
+  enabled: false
+  
+  # Telemetry endpoint
+  endpoint: ""
+  
+  # What to collect
+  collect:
+    version: true
+    os: true
+    hardware: true
+    usage_stats: false

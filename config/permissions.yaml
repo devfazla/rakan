@@ -1,0 +1,313 @@
+# Local AI Platform - Permission Configuration
+# This file defines the permission system for tool access and security
+
+# Permission Levels
+# ALLOW: No confirmation needed (safe operations)
+# READ: Read operations allowed
+# CONFIRM: User confirmation required
+# EXPLICIT: Explicit approval required (dangerous operations)
+# DENY: Always denied (forbidden operations)
+
+permission_levels:
+  ALLOW:
+    description: "No confirmation required"
+    color: "green"
+    
+  READ:
+    description: "Read operations allowed"
+    color: "blue"
+    
+  CONFIRM:
+    description: "User confirmation required"
+    color: "yellow"
+    
+  EXPLICIT:
+    description: "Explicit approval required"
+    color: "red"
+    
+  DENY:
+    description: "Always denied"
+    color: "red"
+
+# Tool Permissions
+tool_permissions:
+  # Filesystem Tools
+  read_file:
+    level: "READ"
+    description: "Read file contents"
+    allowed_paths: ["./", "~/.local-ai", "~/.config/local-ai"]
+    denied_paths: ["/etc/", "/sys/", "/proc/", "~/secrets/", "~/.ssh/"]
+    max_file_size_mb: 10
+    
+  write_file:
+    level: "CONFIRM"
+    description: "Write or create files"
+    allowed_paths: ["./", "~/.local-ai", "~/.config/local-ai"]
+    denied_paths: ["/etc/", "/sys/", "/proc/", "~/secrets/", "~/.ssh/"]
+    max_file_size_mb: 50
+    
+  delete_file:
+    level: "EXPLICIT"
+    description: "Delete files"
+    allowed_paths: ["./", "~/.local-ai"]
+    denied_paths: ["/etc/", "/sys/", "/proc/", "~/secrets/", "~/.ssh/"]
+    
+  list_directory:
+    level: "READ"
+    description: "List directory contents"
+    allowed_paths: ["./", "~/.local-ai", "~/.config/local-ai"]
+    denied_paths: ["/etc/", "/sys/", "/proc/"]
+    
+  search_files:
+    level: "READ"
+    description: "Search for files and content"
+    allowed_paths: ["./", "~/.local-ai"]
+    denied_paths: ["/etc/", "/sys/", "/proc/", "~/secrets/"]
+    
+  # Terminal Tools
+  run_command:
+    level: "EXPLICIT"
+    description: "Execute shell commands"
+    denied_commands:
+      - "rm -rf /"
+      - "mkfs"
+      - "dd if=/dev/zero"
+      - ":(){ :|:& };:"  # Fork bomb
+      - "chmod 777 /"
+      - "chown root:root"
+      - "shutdown"
+      - "reboot"
+      - "init 0"
+    safe_commands:
+      - "ls"
+      - "pwd"
+      - "echo"
+      - "cat"
+      - "grep"
+      - "find"
+      - "git status"
+      - "git diff"
+      - "git log"
+    timeout_seconds: 30
+    
+  # Git Tools
+  git_status:
+    level: "READ"
+    description: "Get git repository status"
+    
+  git_diff:
+    level: "READ"
+    description: "Show git differences"
+    
+  git_log:
+    level: "READ"
+    description: "Show git commit history"
+    
+  git_commit:
+    level: "CONFIRM"
+    description: "Create git commits"
+    
+  git_push:
+    level: "EXPLICIT"
+    description: "Push changes to remote repository"
+    requires_confirmation: true
+    
+  git_pull:
+    level: "CONFIRM"
+    description: "Pull changes from remote repository"
+    
+  git_checkout:
+    level: "CONFIRM"
+    description: "Switch git branches or commits"
+    
+  # Search Tools
+  search_code:
+    level: "READ"
+    description: "Search code within files"
+    allowed_paths: ["./", "~/.local-ai"]
+    denied_paths: ["/etc/", "/sys/", "/proc/", "~/secrets/"]
+    
+  # Agent Tools
+  plan_task:
+    level: "ALLOW"
+    description: "Plan multi-step tasks"
+    
+  execute_plan:
+    level: "CONFIRM"
+    description: "Execute planned tasks"
+
+# Path Security Rules
+path_security:
+  # Enable path validation
+  enabled: true
+  
+  # Allowed base directories
+  allowed_bases:
+    - "./"  # Current directory
+    - "~/.local-ai"
+    - "~/.config/local-ai"
+  
+  # Denied path patterns
+  denied_patterns:
+    - "/etc/.*"
+    - "/sys/.*"
+    - "/proc/.*"
+    - "/root/.*"
+    - ".*secrets/.*"
+    - ".*\\.ssh/.*"
+    - ".*\\.gnupg/.*"
+    - ".*password.*"
+    - ".*credential.*"
+    - ".*key.*"
+  
+  # Max path depth
+  max_depth: 20
+
+# Command Security Rules
+command_security:
+  # Enable command validation
+  enabled: true
+  
+  # Require explicit approval for:
+  dangerous_patterns:
+    - "rm.*-rf"
+    - "mkfs"
+    - "dd.*if=/dev"
+    - "chmod.*777"
+    - "chown.*root"
+    - "shutdown"
+    - "reboot"
+    - ">:"
+    - "sudo"
+    - "su "
+  
+  # Commands that are always safe
+  safe_commands:
+    - "ls"
+    - "pwd"
+    - "echo"
+    - "cat"
+    - "head"
+    - "tail"
+    - "grep"
+    - "find"
+    - "wc"
+    - "sort"
+    - "uniq"
+    - "cut"
+    - "date"
+    - "whoami"
+    - "git status"
+    - "git diff"
+    - "git log"
+    - "git branch"
+    - "python.*--version"
+    - "node.*--version"
+
+# Resource Limits
+resource_limits:
+  # Maximum execution time for tools (seconds)
+  max_execution_time: 30
+  
+  # Maximum memory per tool operation (MB)
+  max_memory_mb: 512
+  
+  # Maximum file size for operations (MB)
+  max_file_size_mb: 10
+  
+  # Maximum number of concurrent tool operations
+  max_concurrent_operations: 3
+  
+  # Rate limiting (requests per minute)
+  rate_limit: 60
+
+# Session Security
+session_security:
+  # Session timeout (seconds)
+  timeout: 3600
+  
+  # Maximum session duration (seconds)
+  max_duration: 86400
+  
+  # Require re-authentication for dangerous operations
+  reauth_dangerous: true
+  
+  # Lock sessions after failed attempts
+  lock_after_failures: 5
+  
+  # Lock duration (seconds)
+  lock_duration: 300
+
+# Audit Logging
+audit_logging:
+  # Enable audit logging
+  enabled: true
+  
+  # Log file path
+  log_file: "~/.local-ai/logs/audit.log"
+  
+  # What to log
+  log_permissions: true
+  log_tool_executions: true
+  log_denials: true
+  log_system_errors: true
+  
+  # Log retention (days)
+  retention_days: 30
+  
+  # Log format (json, text)
+  format: "json"
+
+# User Interaction
+user_interaction:
+  # Show permission prompts
+  show_prompts: true
+  
+  # Prompt timeout (seconds)
+  prompt_timeout: 120
+  
+  # Default action on timeout (deny, allow)
+  timeout_action: "deny"
+  
+  # Show tool execution progress
+  show_progress: true
+  
+  # Show detailed error messages
+  show_errors: true
+  
+  # Enable explanation of why permission is needed
+  explain_permissions: true
+
+# Advanced Security
+advanced_security:
+  # Enable input validation
+  validate_inputs: true
+  
+  # Enable output sanitization
+  sanitize_outputs: true
+  
+  # Enable sandboxing (if available)
+  enable_sandboxing: false
+  
+  # Check for known vulnerabilities
+  vulnerability_check: true
+  
+  # Validate file signatures
+  validate_signatures: false
+  
+  # Encrypt sensitive data
+  encrypt_sensitive: true
+
+# Emergency Settings
+emergency:
+  # Emergency stop button
+  enable_stop: true
+  
+  # Kill switch for dangerous operations
+  kill_switch: true
+  
+  # Safe mode (restrictive permissions)
+  safe_mode: false
+  
+  # Emergency contact
+  emergency_contact: ""
