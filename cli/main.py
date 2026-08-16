@@ -40,7 +40,7 @@ def show_ascii_intro():
                         if terminal_width < 60:
                             # Very small terminal - show simple version
                             print("RAKAN - Local AI Development Platform")
-                            print("Created by DevFazla")
+                            print("@devFazla")
                             print()
                         elif terminal_width < 80:
                             # Small terminal - show condensed version
@@ -49,6 +49,7 @@ def show_ascii_intro():
                             for line in condensed[:3]:  # Show first 3 lines
                                 print(line)
                             print("RAKAN - Local AI Development Platform")
+                            print("@devFazla")
                             print()
                         else:
                             # Normal terminal - show full version
@@ -56,11 +57,11 @@ def show_ascii_intro():
                             print()
         else:
             print("RAKAN - Local AI Development Platform")
-            print("Created by DevFazla")
+            print("@devFazla")
             print()
     except Exception:
         print("RAKAN - Local AI Development Platform")
-        print("Created by DevFazla")
+        print("@devFazla")
         print()
 
 
