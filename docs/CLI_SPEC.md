@@ -249,6 +249,29 @@ Examples:
   rakan config --set model.default qwen2.5-coder-1.5b
 ```
 
+### rakan uninstall
+Uninstall RAKAN from system.
+
+```bash
+rakan uninstall [options]
+```
+
+**Options:**
+- `--force` - Skip confirmation prompt
+
+**Behavior:**
+- Removes wrapper file (rakan.bat or rakan)
+- Removes data directory (~/.rakan)
+- Removes PATH entry
+- Provides manual cleanup instructions if needed
+- Requires confirmation by default (y/n)
+
+**Examples:**
+```bash
+rakan uninstall           # Interactive uninstall with confirmation
+rakan uninstall --force   # Skip confirmation prompt
+```
+
 ### rakan server
 Web server management.
 

@@ -809,6 +809,53 @@ Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
 
 ---
 
+## Uninstallation
+
+### Uninstall RAKAN
+
+To uninstall RAKAN from your system:
+
+```bash
+rakan uninstall
+```
+
+This will:
+- Show what will be removed
+- Ask for confirmation (y/n)
+- Remove the wrapper file
+- Remove the data directory (~/.rakan)
+- Remove PATH entries
+- Provide manual cleanup instructions if needed
+
+**Force uninstall (skip confirmation):**
+```bash
+rakan uninstall --force
+```
+
+**What gets removed:**
+- Wrapper file (rakan.bat on Windows, rakan on Linux/macOS)
+- Data directory (~/.rakan)
+- PATH entries
+- Models and configuration
+
+**Manual cleanup (if needed):**
+
+**Windows:**
+1. Delete wrapper file: `C:\Users\YourName\rakan.bat`
+2. Remove from PATH:
+   - Press Win+R, type "sysdm.cpl"
+   - Go to Advanced tab, click Environment Variables
+   - Under User variables, find PATH and click Edit
+   - Remove your user directory from the list
+3. Delete data directory: `C:\Users\YourName\.rakan`
+
+**Linux/macOS:**
+1. Delete wrapper file: `~/.local/bin/rakan`
+2. Remove from shell config (~/.bashrc, ~/.zshrc, etc.)
+3. Delete data directory: `~/.rakan`
+
+---
+
 ## License
 
 [See LICENSE file](LICENSE) for license information.

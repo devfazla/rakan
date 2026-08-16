@@ -94,6 +94,7 @@ Examples:
   rakan model list          List available models
   rakan model use <name>    Select a model
   rakan chat                Start interactive chat
+  rakan uninstall           Uninstall RAKAN
   
 For more information, see: https://github.com/devfazla/rakan
         """
@@ -394,6 +395,17 @@ For more information, see: https://github.com/devfazla/rakan
             help='Port to bind to'
         )
         
+        # rakan uninstall
+        uninstall_parser = subparsers.add_parser(
+            'uninstall',
+            help='Uninstall RAKAN from system'
+        )
+        uninstall_parser.add_argument(
+            '--force',
+            action='store_true',
+            help='Skip confirmation prompt'
+        )
+        
         return parser
     
     def run(self, args=None):
@@ -444,6 +456,8 @@ For more information, see: https://github.com/devfazla/rakan
             return self.handle_agent(args)
         elif command == 'server':
             return start_server(args)
+        elif command == 'uninstall':
+            return self.handle_uninstall(args)
         else:
             self.logger.error(f"Unknown command: {command}")
             return 1
@@ -499,6 +513,179 @@ For more information, see: https://github.com/devfazla/rakan
         else:
             self.logger.error(f"Unknown agent command: {agent_command}")
             return 1
+    
+    def handle_uninstall(self, args):
+        """Handle uninstall command."""
+        import platform as pf
+        import os
+        import sys
+        
+        print("=" * 60)
+        print("RAKAN Uninstallation")
+        print("=" * 60)
+        print()
+        
+        # Detect platform
+        system = pf.system()
+        
+        # Show what will be removed
+        print("This will remove:")
+        
+        if system == "Windows":
+            user_profile = os.path.expanduser("~")
+            wrapper_file = os.path.join(user_profile, "rakan.bat")
+            print(f"  - Wrapper file: {wrapper_file}")
+            print(f"  - PATH entry: {user_profile}")
+        else:
+            install_dir = os.path.expanduser("~/.local/bin")
+            wrapper_file = os.path.join(install_dir, "rakan")
+            print(f"  - Wrapper file: {wrapper_file}")
+            print(f"  - PATH entry: {install_dir}")
+        
+        print(f"  - Data directory: {os.path.expanduser('~/.rakan')}")
+        print()
+        
+        # Ask for confirmation
+        if not args.force:
+            try:
+                response = input("Do you want to proceed with uninstallation? (y/n): ").strip().lower()
+                if response != 'y':
+                    print("Uninstallation cancelled.")
+                    return 0
+            except EOFError:
+                print("ERROR: Cannot read input in non-interactive mode.")
+                print("Use --force flag to skip confirmation:")
+                print("  rakan uninstall --force")
+                return 1
+            except Exception as e:
+                print(f"ERROR: Failed to read input: {e}")
+                print("Use --force flag to skip confirmation:")
+                print("  rakan uninstall --force")
+                return 1
+        
+        print()
+        print("Starting uninstallation...")
+        print()
+        
+        # First, try to close any open file handles by closing configuration
+        try:
+            if self.config_manager:
+                # Close any open file handles
+                self.config_manager = None
+        except:
+            pass
+        
+        # Remove wrapper file
+        try:
+            if os.path.exists(wrapper_file):
+                os.remove(wrapper_file)
+                print(f"[OK] Removed wrapper file: {wrapper_file}")
+            else:
+                print(f"[MISSING] Wrapper file not found: {wrapper_file}")
+        except Exception as e:
+            print(f"[ERROR] Failed to remove wrapper file: {e}")
+        
+        # Remove data directory (with retry for locked files)
+        data_dir = os.path.expanduser("~/.rakan")
+        try:
+            if os.path.exists(data_dir):
+                import shutil
+                import time
+                try:
+                    shutil.rmtree(data_dir)
+                    print(f"[OK] Removed data directory: {data_dir}")
+                except OSError as e:
+                    print(f"[PARTIAL] Could not fully remove data directory: {e}")
+                    print(f"[INFO] Some files may be in use by running processes.")
+                    print(f"[INFO] Manual cleanup may be required for: {data_dir}")
+                    print(f"[INFO] Try closing any terminals or editors accessing RAKAN files.")
+                    # Try to remove what we can
+                    try:
+                        for item in os.listdir(data_dir):
+                            item_path = os.path.join(data_dir, item)
+                            try:
+                                if os.path.isfile(item_path):
+                                    os.remove(item_path)
+                                    print(f"[OK] Removed: {item}")
+                                elif os.path.isdir(item_path):
+                                    shutil.rmtree(item_path)
+                                    print(f"[OK] Removed directory: {item}")
+                            except:
+                                pass
+                        # Try to remove the directory again
+                        try:
+                            os.rmdir(data_dir)
+                            print(f"[OK] Removed empty directory: {data_dir}")
+                        except:
+                            pass
+                    except:
+                        pass
+            else:
+                print(f"[MISSING] Data directory not found: {data_dir}")
+        except Exception as e:
+            print(f"[ERROR] Failed to remove data directory: {e}")
+        
+        # Remove from PATH (Windows)
+        if system == "Windows":
+            try:
+                print("[INFO] To complete PATH removal, please:")
+                print("  1. Press Win+R, type 'sysdm.cpl' and press Enter")
+                print("  2. Go to Advanced tab, click Environment Variables")
+                print("  3. Under User variables, find PATH and click Edit")
+                print(f"  4. Remove {user_profile} from the list")
+                print("  5. Close and reopen your terminal")
+            except Exception as e:
+                print(f"[ERROR] Failed to provide PATH removal instructions: {e}")
+        else:
+            # Remove from shell config (Unix)
+            try:
+                shell_config = None
+                if 'zsh' in os.environ.get('SHELL', ''):
+                    shell_config = os.path.expanduser("~/.zshrc")
+                elif 'bash' in os.environ.get('SHELL', ''):
+                    shell_config = os.path.expanduser("~/.bashrc")
+                
+                if shell_config and os.path.exists(shell_config):
+                    with open(shell_config, 'r') as f:
+                        content = f.read()
+                    
+                    # Remove RAKAN PATH entry
+                    lines = content.split('\n')
+                    new_lines = []
+                    skip_next = False
+                    for i, line in enumerate(lines):
+                        if '# RAKAN' in line:
+                            skip_next = True
+                            continue
+                        if skip_next:
+                            if 'export PATH' in line and '.local/bin' in line:
+                                skip_next = False
+                                continue
+                        new_lines.append(line)
+                    
+                    with open(shell_config, 'w') as f:
+                        f.write('\n'.join(new_lines))
+                    
+                    print(f"[OK] Removed PATH entry from {shell_config}")
+                    print(f"  Run 'source {shell_config}' to apply changes")
+                else:
+                    print("[INFO] No shell configuration file found")
+                    print("  Please manually remove ~/.local/bin from your PATH")
+            except Exception as e:
+                print(f"[ERROR] Failed to remove PATH entry: {e}")
+        
+        print()
+        print("=" * 60)
+        print("Uninstallation Complete!")
+        print("=" * 60)
+        print()
+        print("Please close and reopen your terminal for changes to take effect.")
+        print()
+        print("Thank you for using RAKAN!")
+        print("Feedback: https://github.com/devfazla/rakan/issues")
+        print()
+        
+        return 0
     
     def show_version(self):
         """Show version information."""
