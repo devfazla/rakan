@@ -295,7 +295,7 @@ class SystemDoctor:
                     self.info.append(f"  - {model}")
             else:
                 self.warnings.append("No models installed")
-                self.info.append("Install models using: ai model install <model-name>")
+                self.info.append("Install models using: rakan model install <model-name>")
             
             # Check default model setting
             default_model = self.config_manager.get('model.default')
@@ -413,8 +413,8 @@ class SystemDoctor:
             
             if not results['models']['installed_models']:
                 print("  - Install a model:")
-                print("    ai model list")
-                print("    ai model install <model-name>")
+                print("    rakan model list")
+                print("    rakan model install <model-name>")
             
             if not results['configuration']['config_valid']:
                 print("  - Check configuration files")

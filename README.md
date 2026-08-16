@@ -38,22 +38,65 @@ RAKAN is a self-hosted AI development platform designed to run on modest hardwar
 
 ### Installation
 
-Quick installation coming soon. For now, see the [Installation Guide](docs/GUIDE.md) for detailed setup instructions.
+#### Option 1: Automatic Installation (Recommended)
+
+**Windows:**
+```bash
+# Run the installation script
+install_windows.bat
+```
+
+**Linux/macOS:**
+```bash
+# Make the script executable
+chmod +x install_linux.sh
+
+# Run the installation script
+./install_linux.sh
+```
+
+**Cross-platform Python:**
+```bash
+python install.py
+```
+
+After installation, close and reopen your terminal, then run:
+```bash
+rakan --help
+```
+
+#### Option 2: Manual Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/devfazla/rakan.git
+   cd rakan
+   ```
+
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Run RAKAN:
+   ```bash
+   python cli/main.py --help
+   ```
 
 ### Basic Usage
 
 ```bash
 # Check system health
-ai doctor
+rakan doctor
 
 # List available models
-ai model list
+rakan model list
 
 # Start chatting
-ai chat
+rakan chat
 
 # Work with a project
-ai agent --project ./my-project "Fix the bug in the login function"
+rakan agent --project ./my-project "Fix the bug in the login function"
 ```
 
 ## Architecture
@@ -87,13 +130,13 @@ See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for detailed architecture informatio
 
 ## Documentation
 
+- [User Manual](docs/USER_MANUAL.md) - Complete user guide with installation and usage
 - [Architecture](docs/ARCHITECTURE.md) - System architecture and design
 - [Roadmap](docs/ROADMAP.md) - Development phases and timeline
 - [CLI Specification](docs/CLI_SPEC.md) - Command-line interface details
 - [Agent Specification](docs/AGENT_SPEC.md) - Agent capabilities and tools
 - [Model Specification](docs/MODEL_SPEC.md) - Model management and registry
 - [Security](docs/SECURITY.md) - Security architecture and practices
-- [Installation Guide](docs/GUIDE.md) - Installation and setup instructions
 
 ## Current Status
 

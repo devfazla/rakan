@@ -60,7 +60,7 @@ Initial target hardware:
 
 * Linux and Windows should be considered
 
-* The system must remain usable while normal development tools are running
+* The system must remrakann usable while normal development tools are running
 
 
 
@@ -272,13 +272,13 @@ Implement a model manager capable of:
 
 * Validating model files
 
-* Checking checksums when available
+* Checking checksums when avrakanlable
 
 * Selecting a default model
 
 * Switching models
 
-* Detecting available RAM
+* Detecting avrakanlable RAM
 
 * Providing recommendations based on hardware
 
@@ -314,7 +314,7 @@ The installer should eventually support:
 
 3. Detect RAM
 
-4. Detect available disk space
+4. Detect avrakanlable disk space
 
 5. Detect required dependencies
 
@@ -368,31 +368,31 @@ Possible commands:
 
 ```
 
-ai doctor
+rakan doctor
 
-ai model list
+rakan model list
 
-ai model install
+rakan model install
 
-ai model remove
+rakan model remove
 
-ai model use
+rakan model use
 
-ai model info
+rakan model info
 
-ai chat
+rakan chat
 
-ai agent
+rakan agent
 
-ai project init
+rakan project init
 
-ai config
+rakan config
 
-ai server start
+rakan server start
 
-ai server stop
+rakan server stop
 
-ai version
+rakan version
 
 ```
 
@@ -408,13 +408,13 @@ Start with:
 
 ```
 
-ai doctor
+rakan doctor
 
-ai model list
+rakan model list
 
-ai model use
+rakan model use
 
-ai chat
+rakan chat
 
 ```
 
@@ -456,7 +456,7 @@ The agent should eventually support:
 
 * Git operations
 
-* Explaining changes
+* Explrakanning changes
 
 * Planning multi-step tasks
 
@@ -508,7 +508,7 @@ Example:
 
 ```
 
-ai agent --project ./my-project
+rakan agent --project ./my-project
 
 ```
 
@@ -560,15 +560,15 @@ Possible locations:
 
 ```
 
-.local-ai/instructions.md
+.local-rakan/instructions.md
 
-.local-ai/config.yaml
+.local-rakan/config.yaml
 
 ```
 
 
 
-These should contain project-specific instructions such as:
+These should contrakann project-specific instructions such as:
 
 
 
@@ -580,15 +580,15 @@ These should contain project-specific instructions such as:
 
 * Testing requirements
 
-* Important constraints
+* Important constrrakannts
 
 
 
-Do not confuse persistent instructions with model training.
+Do not confuse persistent instructions with model trrakanning.
 
 
 
-The initial system should use configuration, prompts and retrieved context rather than attempting to train the model.
+The initial system should use configuration, prompts and retrieved context rather than attempting to trrakann the model.
 
 
 
@@ -708,7 +708,7 @@ Therefore:
 
 * Provide a low-resource mode.
 
-* Make resource usage visible through `ai doctor`.
+* Make resource usage visible through `rakan doctor`.
 
 
 
@@ -792,7 +792,7 @@ The model files should be stored outside the Git repository.
 
 
 
-The Git repository should contain configuration and metadata, not multi-gigabyte model files.
+The Git repository should contrakann configuration and metadata, not multi-gigabyte model files.
 
 
 
@@ -828,7 +828,7 @@ Implement:
 
 * CLI skeleton
 
-* `ai doctor`
+* `rakan doctor`
 
 
 
@@ -866,7 +866,7 @@ Implement:
 
 * Streaming output
 
-* `ai chat`
+* `rakan chat`
 
 
 
@@ -1012,7 +1012,7 @@ When I ask you to implement something:
 
 3. Identify dependencies.
 
-4. Explain the proposed change briefly.
+4. Explrakann the proposed change briefly.
 
 5. Implement the smallest correct change.
 
@@ -1022,13 +1022,13 @@ When I ask you to implement something:
 
 8. Report what changed.
 
-9. Report any remaining issues.
+9. Report any remrakanning issues.
 
 10. Update documentation when architecture or behavior changes.
 
 
 
-If my requested implementation conflicts with the architecture, explain why before changing the architecture.
+If my requested implementation conflicts with the architecture, explrakann why before changing the architecture.
 
 
 
@@ -1054,7 +1054,7 @@ Prioritize:
 
 * Readability
 
-* Maintainability
+* Mrakanntrakannability
 
 * Type safety where appropriate
 
@@ -1214,7 +1214,7 @@ Before writing application code:
 
 9. Create the installer specification.
 
-10. Then implement only the initial CLI skeleton and `ai doctor`.
+10. Then implement only the initial CLI skeleton and `rakan doctor`.
 
 
 
@@ -1234,13 +1234,13 @@ After completing the first milestone, show:
 
 * Tests executed
 
-* Remaining work
+* Remrakanning work
 
 * Recommended next milestone
 
 
 
-The goal is to build a real, maintainable local AI platform incrementally—not to generate a large amount of code that cannot be maintained.
+The goal is to build a real, mrakanntrakannable local AI platform incrementally—not to generate a large amount of code that cannot be mrakanntrakanned.
 
 
 

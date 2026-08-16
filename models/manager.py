@@ -473,7 +473,7 @@ class ModelManager:
         
         # Check if model is installed
         if model_name not in self.installed_models:
-            result['message'] = f"Model {model_name} is not installed. Install it first using: ai model install {model_name}"
+            result['message'] = f"Model {model_name} is not installed. Install it first using: rakan model install {model_name}"
             return result
         
         # Check if model can run on current hardware

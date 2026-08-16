@@ -1,5 +1,5 @@
 # Local AI Development Platform - Agent Context File
-# This file maintains project state, progress, and context for AI agents working on this project
+# This file mrakanntrakanns project state, progress, and context for AI agents working on this project
 
 ## Project Overview
 **Project Name**: Local AI Development Platform  
@@ -36,7 +36,7 @@
 - ✅ All documentation files created (ROADMAP.md, CLI_SPEC.md, INSTALLER_SPEC.md, AGENT_SPEC.md, MODEL_SPEC.md, SECURITY.md)
 - ✅ Project root files created (README.md, LICENSE, CONTRIBUTING.md, CHANGELOG.md)
 - ✅ Configuration system established (default.yaml, models.yaml, permissions.yaml)
-- ✅ Agent context file created and maintained
+- ✅ Agent context file created and mrakanntrakanned
 
 ### Current Phase: Phase 6 - Backend
 **Status**: COMPLETED ✅  
@@ -97,7 +97,7 @@
 
 ### Upcoming Phases
 - Phase 2: Model System (Model registry, manager, llama.cpp integration) - COMPLETED
-- Phase 3: Chat (Provider abstraction, streaming, ai chat) - COMPLETED
+- Phase 3: Chat (Provider abstraction, streaming, rakan chat) - COMPLETED
 - Phase 4: Project Context (File search, context builder) - COMPLETED
 - Phase 5: Agent (Tools, permissions) - COMPLETED
 - Phase 6: Backend (API, sessions) - COMPLETED
@@ -119,7 +119,7 @@
 11. Every major feature must be testable independently
 12. Incremental implementation
 
-## Important Constraints
+## Important Constrrakannts
 - Never silently download or execute unknown binaries
 - Never commit model files, secrets, or build artifacts
 - Use platform-aware path handling
@@ -139,25 +139,25 @@
 - Use small, logical git commits
 
 ## Configuration Locations
-- Main config: `config/default.yaml`
+- Mrakann config: `config/default.yaml`
 - Models: `config/models.yaml`
 - Permissions: `config/permissions.yaml`
-- Project instructions: `.local-ai/instructions.md` or `.local-ai/config.yaml`
+- Project instructions: `.local-rakan/instructions.md` or `.local-rakan/config.yaml`
 
 ## CLI Commands (Planned)
 Initial focus:
-- `ai doctor` - System diagnostics
-- `ai model list` - List installed models
-- `ai model use` - Select active model
-- `ai chat` - Interactive chat
+- `rakan doctor` - System diagnostics
+- `rakan model list` - List installed models
+- `rakan model use` - Select active model
+- `rakan chat` - Interactive chat
 
 Future commands:
-- `ai model install/remove/info`
-- `ai agent` - Agent operations
-- `ai project init` - Project setup
-- `ai config` - Configuration management
-- `ai server start/stop` - Web server control
-- `ai version` - Version information
+- `rakan model install/remove/info`
+- `rakan agent` - Agent operations
+- `rakan project init` - Project setup
+- `rakan config` - Configuration management
+- `rakan server start/stop` - Web server control
+- `rakan version` - Version information
 
 ## Agent Memory Notes
 - This is a greenfield project starting from documentation only
@@ -179,7 +179,7 @@ Future commands:
 - Implemented comprehensive logging infrastructure with file, console, and audit logging
 - Created configuration management system with YAML loading and validation
 - Built complete CLI skeleton with argument parsing and command routing
-- Implemented fully functional `ai doctor` command with system diagnostics
+- Implemented fully functional `rakan doctor` command with system diagnostics
 - Created basic test infrastructure with pytest and 13 passing unit tests
 - Updated .context file with real-time progress tracking
 - Created comprehensive Phase 1 completion report (docs/PHASE1_COMPLETION.md)
@@ -202,7 +202,7 @@ Future commands:
 - Added streaming output support with async generation
 - Implemented conversation/session management with JSON persistence
 - Created prompt construction system with templates and context management
-- Implemented ai chat command with demo mode
+- Implemented rakan chat command with demo mode
 - Added context window management with token estimation
 - Implemented temperature and sampling parameters in GenerationConfig
 - All chat components tested and working
@@ -216,7 +216,7 @@ Future commands:
 - Implemented instruction file support with priority-based loading
 - Added configuration file parsing for multiple project types (15+ formats)
 - Implemented Git integration with status, diff, and commit history
-- Created project context CLI commands (ai project context, ai project init)
+- Created project context CLI commands (rakan project context, rakan project init)
 - Enhanced mobile platform support (Flutter, Dart, Android, iOS)
 - Added API specification support (OpenAPI, Swagger)
 - All project context components tested and working
@@ -229,7 +229,7 @@ Future commands:
 - Added tool registry and discovery
 - Implemented safe filesystem operations
 - Added terminal/command execution with dangerous command filtering
-- Created agent CLI commands (ai agent run, ai agent permissions, ai agent audit)
+- Created agent CLI commands (rakan agent run, rakan agent permissions, rakan agent audit)
 - All agent components tested and working
 - Updated .context file with Phase 5 completion
 - **Phase 6 (Backend) COMPLETED successfully**
@@ -240,7 +240,7 @@ Future commands:
 - Implemented WebSocket support for streaming
 - Added CORS and security headers
 - Created API documentation with Pydantic models
-- Added CLI command for server startup (ai server)
+- Added CLI command for server startup (rakan server)
 - All backend components working with optional FastAPI dependency
 - Updated .context file with Phase 6 completion
 - Ready to proceed with Phase 7 (Web UI)

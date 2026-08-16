@@ -59,28 +59,54 @@ RAKAN is a modular, portable, local-first AI coding assistant that runs on consu
 
 ## Installation
 
-### Option 1: Using the Installer (Recommended)
+### Option 1: Automatic Installation (Recommended)
 
 #### Windows
 
-1. Download the latest RAKAN installer from the [GitHub releases](https://github.com/devfazla/rakan/releases)
-2. Run the installer executable
-3. Follow the configuration wizard
-4. Choose your preferred model (Qwen2.5-Coder 1.5B or 3B)
-5. Select installation directory (default: `C:\Users\YourName\rakan`)
-6. Optionally create desktop shortcut
-7. Complete installation
+Run the automatic installation script:
+```bash
+install_windows.bat
+```
 
-#### Linux
+This script will:
+- Check for Python installation
+- Create a batch file wrapper for RAKAN
+- Add RAKAN to your system PATH
+- Provide instructions for manual PATH setup if needed
 
-1. Download the latest RAKAN installer from the [GitHub releases](https://github.com/devfazla/rakan/releases)
-2. Extract the archive
-3. Run the installer:
-   ```bash
-   python installer/installer.py install
-   ```
-4. Follow the configuration wizard
-5. Complete installation
+After installation, close and reopen your terminal, then run:
+```bash
+rakan --help
+```
+
+#### Linux/macOS
+
+Run the automatic installation script:
+```bash
+chmod +x install_linux.sh
+./install_linux.sh
+```
+
+This script will:
+- Check for Python installation
+- Create a shell script wrapper for RAKAN
+- Add RAKAN to your PATH in your shell configuration
+- Provide instructions for reloading your shell
+
+After installation, run:
+```bash
+source ~/.bashrc  # or ~/.zshrc
+rakan --help
+```
+
+#### Cross-platform Python
+
+Run the Python installation script:
+```bash
+python install.py
+```
+
+This script works on all platforms and handles platform-specific setup automatically.
 
 ### Option 2: Manual Installation
 
@@ -102,9 +128,16 @@ RAKAN is a modular, portable, local-first AI coding assistant that runs on consu
    pip install -r requirements.txt
    ```
 
-3. Verify installation:
+3. Run RAKAN:
    ```bash
-   python cli/main.py doctor
+   python cli/main.py --help
+   ```
+
+4. (Optional) Create an alias for easier access:
+   ```bash
+   # Add to your shell configuration (~/.bashrc, ~/.zshrc, etc.)
+   alias rakan='python /path/to/rakan/cli/main.py'
+   ```
    ```
 
 4. (Optional) Install optional dependencies for web UI:
