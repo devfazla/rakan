@@ -127,7 +127,20 @@ For more information, see: https://github.com/devfazla/rakan
         )
         
         # rakan doctor
-        self._add_doctor_command(subparsers)
+        doctor_parser = subparsers.add_parser(
+            'doctor',
+            help='Check system health and configuration'
+        )
+        doctor_parser.add_argument(
+            '--fix',
+            action='store_true',
+            help='Attempt to fix detected issues automatically'
+        )
+        doctor_parser.add_argument(
+            '--detailed',
+            action='store_true',
+            help='Show detailed diagnostic information'
+        )
         
         # rakan model
         model_parser = subparsers.add_parser(
@@ -380,26 +393,7 @@ For more information, see: https://github.com/devfazla/rakan
             help='Port to bind to'
         )
         
-        self._add_doctor_command(subparsers)
-        
         return parser
-    
-    def _add_doctor_command(self, subparsers):
-        """Add doctor command to parser."""
-        doctor_parser = subparsers.add_parser(
-            'doctor',
-            help='Check system health and configuration'
-        )
-        doctor_parser.add_argument(
-            '--fix',
-            action='store_true',
-            help='Attempt to fix detected issues automatically'
-        )
-        doctor_parser.add_argument(
-            '--detailed',
-            action='store_true',
-            help='Show detailed diagnostic information'
-        )
     
     def run(self, args=None):
         """Run the CLI application."""
@@ -462,7 +456,7 @@ For more information, see: https://github.com/devfazla/rakan
         model_command = args.model_command
         
         if model_command == 'list':
-            return list_models(available=args.available, installed=args.installed)
+            return list_models(args)
         elif model_command == 'install':
             return install_model(args.model_name)
         elif model_command == 'remove':
