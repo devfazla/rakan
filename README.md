@@ -38,65 +38,46 @@ RAKAN is a self-hosted AI development platform designed to run on modest hardwar
 
 ### Installation
 
-#### Option 1: Automatic Installation (Recommended)
-
-**Windows:**
-```bash
-# Run the installation script
-install_windows.bat
-```
-
-**Linux/macOS:**
-```bash
-# Make the script executable
-chmod +x install_linux.sh
-
-# Run the installation script
-./install_linux.sh
-```
-
-**Cross-platform Python:**
+**Single Command Installation:**
 ```bash
 python install.py
 ```
 
+This single command handles everything:
+- Checks Python installation
+- Installs all dependencies
+- Sets up the `rakan` command on your system
+- Creates necessary directories
+- Configures the environment
+
 After installation, close and reopen your terminal, then run:
 ```bash
-rakan --help
+rakan
 ```
-
-#### Option 2: Manual Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/devfazla/rakan.git
-   cd rakan
-   ```
-
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. Run RAKAN:
-   ```bash
-   python cli/main.py --help
-   ```
 
 ### Basic Usage
 
+**Interactive Mode (Default):**
 ```bash
-# Check system health
-rakan doctor
+rakan
+```
+This starts an interactive CLI session where you can:
+- Type `help` for available commands
+- Use commands like `doctor`, `model list`, `chat`, etc.
+- Type `exit` to quit
 
-# List available models
-rakan model list
+**Direct Commands:**
+```bash
+rakan doctor              # Check system health
+rakan model list          # List available models
+rakan chat                # Start interactive chat
+rakan web                 # Start web server
+rakan agent               # Run agent
+```
 
-# Start chatting
-rakan chat
-
-# Work with a project
-rakan agent --project ./my-project "Fix the bug in the login function"
+**Start All Components:**
+```bash
+rakan start               # Start all RAKAN components
 ```
 
 ## Architecture

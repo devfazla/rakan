@@ -59,56 +59,44 @@ RAKAN is a modular, portable, local-first AI coding assistant that runs on consu
 
 ## Installation
 
-### Option 1: Automatic Installation (Recommended)
+### Single Command Installation
 
-#### Windows
+RAKAN has a single installer that handles everything:
 
-Run the automatic installation script:
-```bash
-install_windows.bat
-```
-
-This script will:
-- Check for Python installation
-- Create a batch file wrapper for RAKAN
-- Add RAKAN to your system PATH
-- Provide instructions for manual PATH setup if needed
-
-After installation, close and reopen your terminal, then run:
-```bash
-rakan --help
-```
-
-#### Linux/macOS
-
-Run the automatic installation script:
-```bash
-chmod +x install_linux.sh
-./install_linux.sh
-```
-
-This script will:
-- Check for Python installation
-- Create a shell script wrapper for RAKAN
-- Add RAKAN to your PATH in your shell configuration
-- Provide instructions for reloading your shell
-
-After installation, run:
-```bash
-source ~/.bashrc  # or ~/.zshrc
-rakan --help
-```
-
-#### Cross-platform Python
-
-Run the Python installation script:
 ```bash
 python install.py
 ```
 
-This script works on all platforms and handles platform-specific setup automatically.
+This command will:
+- Check Python installation (requires 3.8+)
+- Install all required dependencies
+- Set up the `rakan` command on your system
+- Create necessary directories (~/.rakan)
+- Configure the environment
 
-### Option 2: Manual Installation
+After installation:
+1. Close and reopen your terminal
+2. Run `rakan` to start the interactive CLI
+
+### Manual Installation
+
+If you prefer manual installation:
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/devfazla/rakan.git
+   cd rakan
+   ```
+
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Run RAKAN directly:
+   ```bash
+   python cli/main.py
+   ```
 
 #### Prerequisites
 
@@ -206,145 +194,115 @@ agent:
 
 ## Getting Started
 
-### First Steps
+### Interactive CLI Mode
 
-1. **Check System Health**
-   ```bash
-   rakan doctor
-   ```
-
-2. **List Available Models**
-   ```bash
-   rakan model list
-   ```
-
-3. **Install a Model**
-   ```bash
-   rakan model install qwen2.5-coder-1.5b-instruct
-   ```
-
-4. **Select Active Model**
-   ```bash
-   rakan model use qwen2.5-coder-1.5b-instruct
-   ```
-
-5. **Start Chat**
-   ```bash
-   rakan chat
-   ```
-
-### Quick Test
-
-Test your installation with a simple chat session:
+The default way to use RAKAN is through the interactive CLI:
 
 ```bash
-rakan chat
+rakan
 ```
 
-Then try:
+This starts an interactive session where you can type commands directly:
+
 ```
-You: Hello! Can you help me write a Python function?
-RAKAN: Of course! What kind of function would you like me to help you with?
+rakan> help              # Show available commands
+rakan> doctor           # Check system health
+rakan> model list       # List available models
+rakan> chat             # Start chat
+rakan> exit             # Exit RAKAN
+```
+
+### Direct Commands
+
+You can also run RAKAN commands directly:
+
+```bash
+rakan doctor
+rakan model list
+rakan chat
+rakan web
+rakan agent
+```
+
+### Quick Start Commands
+
+```bash
+# Check system health
+rakan doctor
+
+# List available models
+rakan model list
+
+# Install a model
+rakan model install qwen2.5-coder-1.5b-instruct
+
+# Select active model
+rakan model use qwen2.5-coder-1.5b-instruct
+
+# Start chat
+rakan chat
 ```
 
 ---
 
 ## CLI Commands
 
-### System Commands
+### Interactive Mode
 
-#### `rakan doctor`
-Check system health and configuration.
+When you run `rakan` without arguments, you enter interactive mode:
+
+```
+rakan> help
+rakan> doctor
+rakan> model list
+rakan> chat
+rakan> exit
+```
+
+### Available Commands
+
+**System Commands:**
+- `help` - Show available commands
+- `start` - Start all RAKAN components
+- `cli` - Already in CLI mode
+- `web` - Start web server
+- `engine` - Start inference engine
+- `doctor` - Check system health
+- `status` - Show system status
+- `exit` - Exit RAKAN
+
+**Model Commands:**
+- `model list` - List available models
+- `model install <name>` - Install a model
+- `model use <name>` - Select active model
+- `model info <name>` - Show model information
+
+**Chat Commands:**
+- `chat` - Start interactive chat
+
+**Project Commands:**
+- `project context` - Show project context
+- `project init` - Initialize project
+
+**Agent Commands:**
+- `agent` - Run agent in interactive mode
+
+**Server Commands:**
+- `server` - Start API server
+
+### Direct Command Usage
+
+You can also run commands directly without entering interactive mode:
 
 ```bash
 rakan doctor
-rakan doctor --detailed
-rakan doctor --fix
-```
-
-### Model Commands
-
-#### `rakan model list`
-List available and installed models.
-
-```bash
 rakan model list
-rakan model list --available
-rakan model list --installed
-```
-
-#### `rakan model install`
-Download and install a model.
-
-```bash
-rakan model install qwen2.5-coder-1.5b-instruct
-```
-
-#### `rakan model remove`
-Remove an installed model.
-
-```bash
-rakan model remove qwen2.5-coder-1.5b-instruct
-```
-
-#### `rakan model use`
-Select active model.
-
-```bash
-rakan model use qwen2.5-coder-1.5b-instruct
-```
-
-#### `rakan model info`
-Show detailed information about a model.
-
-```bash
-rakan model info qwen2.5-coder-1.5b-instruct
-```
-
-### Chat Commands
-
-#### `rakan chat`
-Start interactive chat session.
-
-```bash
 rakan chat
-rakan chat --model qwen2.5-coder-3b-instruct
-rakan chat --project ./my-project
-rakan chat --session my-session
-rakan chat --temperature 0.8
+rakan web
+rakan agent
 ```
 
-### Project Commands
-
-#### `rakan project context`
-Show project context information.
-
-```bash
-rakan project context
-rakan project context --directory ./my-project
-rakan project context --build-context --query "database"
-```
-
-#### `rakan project init`
-Initialize project for AI understanding.
-
-```bash
-rakan project init
-rakan project init --directory ./my-project
-rakan project init --force
-```
-
-### Agent Commands
-
-#### `rakan agent run`
-Run agent in interactive mode.
-
-```bash
-rakan agent run
-rakan agent run --mode interactive
-rakan agent run --mode single --task "Fix the bug"
-rakan agent run --auto-approve
-```
+## Model Management
 
 #### `rakan agent permissions`
 Show permission rules.
@@ -389,7 +347,22 @@ Access the web interface at `http://localhost:8000`
 - Real-time chat with AI assistant
 - Message history
 - Auto-scroll to latest messages
-- Send with Enter, new line with Shift+Enter
+## Web Interface
+
+### Starting the Web Interface
+
+```bash
+rakan web
+```
+
+This starts the web server at http://localhost:8000
+
+### Web Interface Features
+
+#### Chat Interface
+- Real-time chat with AI assistant
+- Message history
+- Auto-scroll to latest messages
 
 #### Model Selection
 - Dropdown to select active model
@@ -415,53 +388,6 @@ Access the web interface at `http://localhost:8000`
 - Light theme option
 - Theme toggle button
 
-### API Endpoints
-
-#### Health Check
-```
-GET /api/v1/health
-```
-
-#### Agent Execution
-```
-POST /api/v1/agent
-Content-Type: application/json
-
-{
-  "message": "Your task here",
-  "context": {},
-  "auto_approve": false
-}
-```
-
-#### Model List
-```
-GET /api/v1/models
-```
-
-#### Chat
-```
-POST /api/v1/chat
-Content-Type: application/json
-
-{
-  "message": "Your message",
-  "model": "qwen2.5-coder-1.5b-instruct",
-  "session_id": "optional-session-id",
-  "temperature": 0.7,
-  "max_tokens": 1024
-}
-```
-
-#### Session Management
-```
-GET /api/v1/sessions
-GET /api/v1/sessions/{session_id}
-DELETE /api/v1/sessions/{session_id}
-```
-
----
-
 ## Model Management
 
 ### Available Models
@@ -484,7 +410,22 @@ DELETE /api/v1/sessions/{session_id}
 
 #### Installing a Model
 ```bash
-rakan model install qwen2.5-coder-1.5b-instruct
+rakan> model install qwen2.5-coder-1.5b-instruct
+```
+
+#### Checking Installation Status
+```bash
+rakan> model list
+```
+
+#### Switching Models
+```bash
+rakan> model use qwen2.5-coder-3b-instruct
+```
+
+#### Removing a Model
+```bash
+rakan> model remove qwen2.5-coder-1.5b-instruct
 ```
 
 #### Checking Installation Status

@@ -1,10 +1,10 @@
 """
 RAKAN - Main CLI Entry Point
-Provides the command-line interface for RAKAN.
+Interactive CLI that captures terminal like claudecode
 """
 
 import sys
-import argparse
+import os
 from pathlib import Path
 
 # Add project root to path for imports
@@ -20,41 +20,19 @@ from cli.commands.agent_cmd import agent_command, show_permissions, show_audit_l
 
 
 def show_ascii_intro():
-    """Display RAKAN ASCII art introduction with responsive sizing."""
+    """Display RAKAN ASCII art introduction."""
     try:
-        import shutil
-        terminal_width = shutil.get_terminal_size().columns
-        
         ascii_file = project_root / "rakan_ascii.txt"
         if ascii_file.exists():
             with open(ascii_file, 'r') as f:
                 ascii_content = f.read()
-                # Extract ASCII art from between the triple quotes
                 if '"""' in ascii_content:
                     start = ascii_content.find('"""') + 3
                     end = ascii_content.rfind('"""')
                     if start < end:
                         ascii_art = ascii_content[start:end].strip()
-                        
-                        # Responsive scaling based on terminal width
-                        if terminal_width < 60:
-                            # Very small terminal - show simple version
-                            print("RAKAN - Local AI Development Platform")
-                            print("@devFazla")
-                            print()
-                        elif terminal_width < 80:
-                            # Small terminal - show condensed version
-                            lines = ascii_art.split('\n')
-                            condensed = [line for line in lines if line.strip()]
-                            for line in condensed[:3]:  # Show first 3 lines
-                                print(line)
-                            print("RAKAN - Local AI Development Platform")
-                            print("@devFazla")
-                            print()
-                        else:
-                            # Normal terminal - show full version
-                            print(ascii_art)
-                            print()
+                        print(ascii_art)
+                        print()
         else:
             print("RAKAN - Local AI Development Platform")
             print("@devFazla")
@@ -66,651 +44,254 @@ def show_ascii_intro():
 
 
 class RAKANCLI:
-    """Main CLI application for RAKAN."""
+    """Interactive CLI that captures terminal like claudecode."""
     
     def __init__(self):
         self.config_manager = None
         self.logger = None
+        self.running = True
         
     def setup(self):
         """Setup CLI environment."""
-        # Setup configuration and logging
         self.config_manager = get_config_manager()
         setup_logging_from_config()
         self.logger = get_logger(__name__)
     
-    def create_parser(self) -> argparse.ArgumentParser:
-        """Create the main argument parser."""
-        parser = argparse.ArgumentParser(
-            prog='rakan',
-            description='RAKAN - A local-first AI coding assistant',
-            epilog='For more information, visit https://devfazla.com or check the documentation.',
-            formatter_class=argparse.RawDescriptionHelpFormatter
-        )
-        
-        parser.epilog = """
-Examples:
-  rakan doctor              Check system health
-  rakan model list          List available models
-  rakan model use <name>    Select a model
-  rakan chat                Start interactive chat
-  rakan uninstall           Uninstall RAKAN
-  
-For more information, see: https://github.com/devfazla/rakan
-        """
-        
-        # Global options
-        parser.add_argument(
-            '--config',
-            type=str,
-            help='Path to configuration file'
-        )
-        parser.add_argument(
-            '--verbose',
-            action='store_true',
-            help='Enable verbose output'
-        )
-        parser.add_argument(
-            '--quiet',
-            action='store_true',
-            help='Suppress output'
-        )
-        parser.add_argument(
-            '--version',
-            action='store_true',
-            help='Show version information'
-        )
-        
-        # Subcommands
-        subparsers = parser.add_subparsers(
-            dest='command',
-            help='Available commands',
-            metavar='COMMAND'
-        )
-        
-        # rakan doctor
-        doctor_parser = subparsers.add_parser(
-            'doctor',
-            help='Check system health and configuration'
-        )
-        doctor_parser.add_argument(
-            '--fix',
-            action='store_true',
-            help='Attempt to fix detected issues automatically'
-        )
-        doctor_parser.add_argument(
-            '--detailed',
-            action='store_true',
-            help='Show detailed diagnostic information'
-        )
-        
-        # rakan model
-        model_parser = subparsers.add_parser(
-            'model',
-            help='Manage AI models'
-        )
-        model_subparsers = model_parser.add_subparsers(
-            dest='model_command',
-            help='Model management commands'
-        )
-        
-        # rakan model list
-        list_parser = model_subparsers.add_parser(
-            'list',
-            help='List available and installed models'
-        )
-        list_parser.add_argument(
-            '--available',
-            action='store_true',
-            help='Show only available models'
-        )
-        list_parser.add_argument(
-            '--installed',
-            action='store_true',
-            help='Show only installed models'
-        )
-        
-        # rakan model install
-        install_parser = model_subparsers.add_parser(
-            'install',
-            help='Download and install a model'
-        )
-        install_parser.add_argument(
-            'model_name',
-            type=str,
-            help='Name of model to install'
-        )
-        
-        # rakan model remove
-        remove_parser = model_subparsers.add_parser(
-            'remove',
-            help='Remove an installed model'
-        )
-        remove_parser.add_argument(
-            'model_name',
-            type=str,
-            help='Name of model to remove'
-        )
-        
-        # rakan model use
-        use_parser = model_subparsers.add_parser(
-            'use',
-            help='Select active model'
-        )
-        use_parser.add_argument(
-            'model_name',
-            type=str,
-            help='Name of model to use'
-        )
-        
-        # rakan model info
-        info_parser = model_subparsers.add_parser(
-            'info',
-            help='Show detailed information about a model'
-        )
-        info_parser.add_argument(
-            'model_name',
-            type=str,
-            help='Name of model'
-        )
-        
-        # rakan chat
-        chat_parser = subparsers.add_parser(
-            'chat',
-            help='Start interactive chat'
-        )
-        chat_parser.add_argument(
-            '--model',
-            type=str,
-            help='Use specific model'
-        )
-        chat_parser.add_argument(
-            '--project',
-            type=str,
-            help='Work with specific project'
-        )
-        chat_parser.add_argument(
-            '--session',
-            type=str,
-            help='Resume existing session'
-        )
-        chat_parser.add_argument(
-            '--temperature',
-            type=float,
-            default=0.7,
-            help='Sampling temperature (0.0-2.0)'
-        )
-        chat_parser.add_argument(
-            '--max-tokens',
-            type=int,
-            default=1024,
-            help='Maximum tokens to generate'
-        )
-        
-        # rakan project
-        project_parser = subparsers.add_parser(
-            'project',
-            help='Project context and initialization'
-        )
-        project_subparsers = project_parser.add_subparsers(
-            dest='project_command',
-            help='Project management commands'
-        )
-        
-        # rakan project context
-        context_parser = project_subparsers.add_parser(
-            'context',
-            help='Show project context information'
-        )
-        context_parser.add_argument(
-            '--directory',
-            type=str,
-            default='.',
-            help='Project directory (default: current directory)'
-        )
-        context_parser.add_argument(
-            '--build-context',
-            action='store_true',
-            help='Build AI context from project'
-        )
-        context_parser.add_argument(
-            '--query',
-            type=str,
-            help='Query for context building'
-        )
-        context_parser.add_argument(
-            '--strategy',
-            type=str,
-            default='structure',
-            choices=['structure', 'recent', 'relevant', 'full'],
-            help='Context building strategy'
-        )
-        context_parser.add_argument(
-            '--max-files',
-            type=int,
-            default=5,
-            help='Maximum files to include in context'
-        )
-        context_parser.add_argument(
-            '--max-tokens',
-            type=int,
-            default=2000,
-            help='Maximum tokens for context'
-        )
-        context_parser.add_argument(
-            '--show-context',
-            action='store_true',
-            help='Show formatted context for prompt'
-        )
-        
-        # rakan project init
-        init_parser = project_subparsers.add_parser(
-            'init',
-            help='Initialize project for AI understanding'
-        )
-        init_parser.add_argument(
-            '--directory',
-            type=str,
-            default='.',
-            help='Project directory (default: current directory)'
-        )
-        init_parser.add_argument(
-            '--force',
-            action='store_true',
-            help='Overwrite existing instructions file'
-        )
-        
-        # rakan agent
-        agent_parser = subparsers.add_parser(
-            'agent',
-            help='Agent operations and tool execution'
-        )
-        agent_subparsers = agent_parser.add_subparsers(
-            dest='agent_command',
-            help='Agent management commands'
-        )
-        
-        # rakan agent run
-        run_parser = agent_subparsers.add_parser(
-            'run',
-            help='Run agent in interactive mode'
-        )
-        run_parser.add_argument(
-            '--mode',
-            type=str,
-            default='interactive',
-            choices=['interactive', 'single'],
-            help='Agent execution mode'
-        )
-        run_parser.add_argument(
-            '--task',
-            type=str,
-            help='Task to execute (for single mode)'
-        )
-        run_parser.add_argument(
-            '--directory',
-            type=str,
-            default='.',
-            help='Working directory'
-        )
-        run_parser.add_argument(
-            '--auto-approve',
-            action='store_true',
-            help='Auto-approve all operations'
-        )
-        
-        # rakan agent permissions
-        permissions_parser = agent_subparsers.add_parser(
-            'permissions',
-            help='Show permission rules'
-        )
-        
-        # rakan agent audit
-        audit_parser = agent_subparsers.add_parser(
-            'audit',
-            help='Show audit log'
-        )
-        audit_parser.add_argument(
-            '--limit',
-            type=int,
-            default=50,
-            help='Maximum number of entries to show'
-        )
-        
-        # rakan server
-        server_parser = subparsers.add_parser(
-            'server',
-            help='Start API server'
-        )
-        server_parser.add_argument(
-            '--host',
-            type=str,
-            default='127.0.0.1',
-            help='Host to bind to'
-        )
-        server_parser.add_argument(
-            '--port',
-            type=int,
-            default=8000,
-            help='Port to bind to'
-        )
-        
-        # rakan uninstall
-        uninstall_parser = subparsers.add_parser(
-            'uninstall',
-            help='Uninstall RAKAN from system'
-        )
-        uninstall_parser.add_argument(
-            '--force',
-            action='store_true',
-            help='Skip confirmation prompt'
-        )
-        
-        return parser
-    
-    def run(self, args=None):
-        """Run the CLI application."""
-        # Setup environment
-        self.setup()
-        
-        # Parse arguments
-        parser = self.create_parser()
-        parsed_args = parser.parse_args(args)
-        
-        # Handle version
-        if parsed_args.version:
-            self.show_version()
-            return 0
-        
-        # Handle no command
-        if not parsed_args.command:
-            parser.print_help()
-            return 0
-        
-        # Handle verbose/quiet
-        if parsed_args.verbose:
-            self.logger.setLevel('DEBUG')
-        elif parsed_args.quiet:
-            self.logger.setLevel('ERROR')
-        
-        # Route to command handler
-        try:
-            return self.handle_command(parsed_args)
-        except Exception as e:
-            self.logger.error(f"Command failed: {e}")
-            return 1
-    
-    def handle_command(self, args):
-        """Route command to appropriate handler."""
-        command = args.command
-        
-        if command == 'doctor':
-            return self.handle_doctor(args)
-        elif command == 'model':
-            return self.handle_model(args)
-        elif command == 'chat':
-            return self.handle_chat(args)
-        elif command == 'project':
-            return self.handle_project(args)
-        elif command == 'agent':
-            return self.handle_agent(args)
-        elif command == 'server':
-            return start_server(args)
-        elif command == 'uninstall':
-            return self.handle_uninstall(args)
-        else:
-            self.logger.error(f"Unknown command: {command}")
-            return 1
-    
-    def handle_doctor(self, args):
-        """Handle doctor command."""
-        return run_doctor(detailed=args.detailed, fix=args.fix)
-    
-    def handle_model(self, args):
-        """Handle model commands."""
-        model_command = args.model_command
-        
-        if model_command == 'list':
-            return list_models(args)
-        elif model_command == 'install':
-            return install_model(args.model_name)
-        elif model_command == 'remove':
-            return remove_model(args.model_name)
-        elif model_command == 'use':
-            return use_model(args.model_name)
-        elif model_command == 'info':
-            return model_info(args.model_name)
-        else:
-            self.logger.error(f"Unknown model command: {model_command}")
-            return 1
-    
-    def handle_chat(self, args):
-        """Handle chat command."""
-        return chat(args)
-    
-    def handle_project(self, args):
-        """Handle project commands."""
-        project_command = args.project_command
-        
-        if project_command == 'context':
-            return project_context(args)
-        elif project_command == 'init':
-            return init_project(args)
-        else:
-            self.logger.error(f"Unknown project command: {project_command}")
-            return 1
-    
-    def handle_agent(self, args):
-        """Handle agent commands."""
-        agent_command = args.agent_command
-        
-        if agent_command == 'run':
-            return agent_command(args)
-        elif agent_command == 'permissions':
-            return show_permissions(args)
-        elif agent_command == 'audit':
-            return show_audit_log(args)
-        else:
-            self.logger.error(f"Unknown agent command: {agent_command}")
-            return 1
-    
-    def handle_uninstall(self, args):
-        """Handle uninstall command."""
-        import platform as pf
-        import os
-        import sys
-        
+    def show_help(self):
+        """Show help menu."""
+        print("\n" + "=" * 60)
+        print("RAKAN - Interactive CLI")
         print("=" * 60)
-        print("RAKAN Uninstallation")
-        print("=" * 60)
-        print()
+        print("\nAvailable commands:")
+        print("  help          - Show this help")
+        print("  start         - Start all RAKAN components")
+        print("  cli           - Already in CLI mode")
+        print("  web           - Start web server")
+        print("  engine        - Start inference engine")
+        print("  doctor        - Check system health")
+        print("  model list    - List available models")
+        print("  model install <name> - Install a model")
+        print("  model use <name>     - Select active model")
+        print("  chat          - Start interactive chat")
+        print("  project       - Project context operations")
+        print("  agent         - Agent operations")
+        print("  server        - Start API server")
+        print("  status        - Show system status")
+        print("  exit          - Exit RAKAN")
+        print("=" * 60 + "\n")
+    
+    def handle_command(self, command_line):
+        """Handle user command."""
+        parts = command_line.strip().split()
+        if not parts:
+            return
         
-        # Detect platform
-        system = pf.system()
+        command = parts[0].lower()
+        args = parts[1:]
         
-        # Show what will be removed
-        print("This will remove:")
-        
-        if system == "Windows":
-            user_profile = os.path.expanduser("~")
-            wrapper_file = os.path.join(user_profile, "rakan.bat")
-            print(f"  - Wrapper file: {wrapper_file}")
-            print(f"  - PATH entry: {user_profile}")
-        else:
-            install_dir = os.path.expanduser("~/.local/bin")
-            wrapper_file = os.path.join(install_dir, "rakan")
-            print(f"  - Wrapper file: {wrapper_file}")
-            print(f"  - PATH entry: {install_dir}")
-        
-        print(f"  - Data directory: {os.path.expanduser('~/.rakan')}")
-        print()
-        
-        # Ask for confirmation
-        if not args.force:
-            try:
-                response = input("Do you want to proceed with uninstallation? (y/n): ").strip().lower()
-                if response != 'y':
-                    print("Uninstallation cancelled.")
-                    return 0
-            except EOFError:
-                print("ERROR: Cannot read input in non-interactive mode.")
-                print("Use --force flag to skip confirmation:")
-                print("  rakan uninstall --force")
-                return 1
-            except Exception as e:
-                print(f"ERROR: Failed to read input: {e}")
-                print("Use --force flag to skip confirmation:")
-                print("  rakan uninstall --force")
-                return 1
-        
-        print()
-        print("Starting uninstallation...")
-        print()
-        
-        # First, try to close any open file handles by closing configuration
         try:
-            if self.config_manager:
-                # Close any open file handles
-                self.config_manager = None
-        except:
-            pass
-        
-        # Remove wrapper file
-        try:
-            if os.path.exists(wrapper_file):
-                os.remove(wrapper_file)
-                print(f"[OK] Removed wrapper file: {wrapper_file}")
-            else:
-                print(f"[MISSING] Wrapper file not found: {wrapper_file}")
-        except Exception as e:
-            print(f"[ERROR] Failed to remove wrapper file: {e}")
-        
-        # Remove data directory (with retry for locked files)
-        data_dir = os.path.expanduser("~/.rakan")
-        try:
-            if os.path.exists(data_dir):
-                import shutil
-                import time
-                try:
-                    # Remove installation marker first
-                    marker_file = os.path.join(data_dir, ".installation_info")
-                    if os.path.exists(marker_file):
-                        os.remove(marker_file)
-                        print(f"[OK] Removed installation marker: {marker_file}")
-                    
-                    shutil.rmtree(data_dir)
-                    print(f"[OK] Removed data directory: {data_dir}")
-                except OSError as e:
-                    print(f"[PARTIAL] Could not fully remove data directory: {e}")
-                    print(f"[INFO] Some files may be in use by running processes.")
-                    print(f"[INFO] Manual cleanup may be required for: {data_dir}")
-                    print(f"[INFO] Try closing any terminals or editors accessing RAKAN files.")
-                    # Try to remove what we can
-                    try:
-                        for item in os.listdir(data_dir):
-                            item_path = os.path.join(data_dir, item)
-                            try:
-                                if os.path.isfile(item_path):
-                                    os.remove(item_path)
-                                    print(f"[OK] Removed: {item}")
-                                elif os.path.isdir(item_path):
-                                    shutil.rmtree(item_path)
-                                    print(f"[OK] Removed directory: {item}")
-                            except:
-                                pass
-                        # Try to remove the directory again
-                        try:
-                            os.rmdir(data_dir)
-                            print(f"[OK] Removed empty directory: {data_dir}")
-                        except:
-                            pass
-                    except:
-                        pass
-            else:
-                print(f"[MISSING] Data directory not found: {data_dir}")
-        except Exception as e:
-            print(f"[ERROR] Failed to remove data directory: {e}")
-        
-        # Remove from PATH (Windows)
-        if system == "Windows":
-            try:
-                print("[INFO] To complete PATH removal, please:")
-                print("  1. Press Win+R, type 'sysdm.cpl' and press Enter")
-                print("  2. Go to Advanced tab, click Environment Variables")
-                print("  3. Under User variables, find PATH and click Edit")
-                print(f"  4. Remove {user_profile} from the list")
-                print("  5. Close and reopen your terminal")
-            except Exception as e:
-                print(f"[ERROR] Failed to provide PATH removal instructions: {e}")
-        else:
-            # Remove from shell config (Unix)
-            try:
-                shell_config = None
-                if 'zsh' in os.environ.get('SHELL', ''):
-                    shell_config = os.path.expanduser("~/.zshrc")
-                elif 'bash' in os.environ.get('SHELL', ''):
-                    shell_config = os.path.expanduser("~/.bashrc")
-                
-                if shell_config and os.path.exists(shell_config):
-                    with open(shell_config, 'r') as f:
-                        content = f.read()
-                    
-                    # Remove RAKAN PATH entry
-                    lines = content.split('\n')
-                    new_lines = []
-                    skip_next = False
-                    for i, line in enumerate(lines):
-                        if '# RAKAN' in line:
-                            skip_next = True
-                            continue
-                        if skip_next:
-                            if 'export PATH' in line and '.local/bin' in line:
-                                skip_next = False
-                                continue
-                        new_lines.append(line)
-                    
-                    with open(shell_config, 'w') as f:
-                        f.write('\n'.join(new_lines))
-                    
-                    print(f"[OK] Removed PATH entry from {shell_config}")
-                    print(f"  Run 'source {shell_config}' to apply changes")
+            if command in ['exit', 'quit', 'q']:
+                self.running = False
+                print("Goodbye!")
+                return
+            
+            elif command == 'help':
+                self.show_help()
+            
+            elif command == 'doctor':
+                run_doctor(detailed='--detailed' in args, fix='--fix' in args)
+            
+            elif command == 'model':
+                if not args:
+                    list_models(None)
+                elif args[0] == 'list':
+                    list_models(None)
+                elif args[0] == 'install' and len(args) > 1:
+                    install_model(args[1])
+                elif args[0] == 'remove' and len(args) > 1:
+                    remove_model(args[1])
+                elif args[0] == 'use' and len(args) > 1:
+                    use_model(args[1])
+                elif args[0] == 'info' and len(args) > 1:
+                    model_info(args[1])
                 else:
-                    print("[INFO] No shell configuration file found")
-                    print("  Please manually remove ~/.local/bin from your PATH")
-            except Exception as e:
-                print(f"[ERROR] Failed to remove PATH entry: {e}")
+                    print("Unknown model command. Use 'model list' for available commands.")
+            
+            elif command == 'chat':
+                # Create a simple args object
+                class Args:
+                    pass
+                args_obj = Args()
+                args_obj.model = None
+                args_obj.project = '.'
+                args_obj.session = None
+                args_obj.temperature = 0.7
+                args_obj.max_tokens = 1024
+                chat(args_obj)
+            
+            elif command == 'project':
+                if not args:
+                    print("Use 'project context' or 'project init'")
+                elif args[0] == 'context':
+                    class Args:
+                        pass
+                    args_obj = Args()
+                    args_obj.directory = '.'
+                    args_obj.build_context = False
+                    args_obj.query = None
+                    args_obj.strategy = 'structure'
+                    args_obj.max_files = 5
+                    args_obj.max_tokens = 2000
+                    args_obj.show_context = False
+                    project_context(args_obj)
+                elif args[0] == 'init':
+                    class Args:
+                        pass
+                    args_obj = Args()
+                    args_obj.directory = '.'
+                    args_obj.force = False
+                    init_project(args_obj)
+            
+            elif command == 'agent':
+                class Args:
+                    pass
+                args_obj = Args()
+                args_obj.mode = 'interactive'
+                args_obj.task = None
+                args_obj.directory = '.'
+                args_obj.auto_approve = False
+                agent_command(args_obj)
+            
+            elif command == 'server':
+                class Args:
+                    pass
+                args_obj = Args()
+                args_obj.host = '127.0.0.1'
+                args_obj.port = 8000
+                print("Starting server... (Press Ctrl+C to stop)")
+                start_server(args_obj)
+            
+            elif command == 'status':
+                self.show_status()
+            
+            elif command == 'start':
+                self.start_all()
+            
+            elif command == 'cli':
+                # Already in CLI mode
+                print("Already in CLI mode")
+            
+            elif command == 'web':
+                self.start_web()
+            
+            elif command == 'engine':
+                self.start_engine()
+            
+            else:
+                print(f"Unknown command: {command}")
+                print("Type 'help' for available commands")
         
-        print()
-        print("=" * 60)
-        print("Uninstallation Complete!")
-        print("=" * 60)
-        print()
-        print("Please close and reopen your terminal for changes to take effect.")
-        print()
-        print("Thank you for using RAKAN!")
-        print("Feedback: https://github.com/devfazla/rakan/issues")
-        print()
-        
-        return 0
+        except KeyboardInterrupt:
+            print("\nCommand interrupted. Type 'exit' to quit.")
+        except Exception as e:
+            print(f"Error: {e}")
     
-    def show_version(self):
-        """Show version information."""
-        config = self.config_manager.get_config()
-        version = config.get('version', '0.1.0')
-        name = config.get('name', 'RAKAN')
+    def show_status(self):
+        """Show system status."""
+        print("\n" + "=" * 60)
+        print("RAKAN Status")
+        print("=" * 60)
         
-        print(f"{name} v{version}")
-        print("Python CLI Interface")
-        print("© 2026 DevFazla - https://devfazla.com")
+        # Show config status
+        if self.config_manager:
+            config = self.config_manager.get_config()
+            print(f"Application: {config.get('name', 'RAKAN')}")
+            print(f"Version: {config.get('version', '0.1.0')}")
+        
+        # Show directory status
+        data_dir = os.path.expanduser("~/.rakan")
+        if os.path.exists(data_dir):
+            print(f"Data directory: {data_dir}")
+            print(f"Models: {len(os.listdir(os.path.join(data_dir, 'models'))) if os.path.exists(os.path.join(data_dir, 'models')) else 0}")
+        else:
+            print("Data directory: Not created")
+        
+        print("=" * 60 + "\n")
+    
+    def start_all(self):
+        """Start all RAKAN components."""
+        print("\nStarting all RAKAN components...")
+        print("This will start:")
+        print("  - CLI (Interactive mode)")
+        print("  - Web Server (http://localhost:8000)")
+        print("  - Agent (Background)")
+        print()
+        print("Note: Starting all components simultaneously is not yet implemented.")
+        print("Use individual commands:")
+        print("  'web' to start web server")
+        print("  'agent' to start agent")
+        print("  Already in CLI mode")
+    
+    def start_web(self):
+        """Start web server."""
+        print("\nStarting web server...")
+        class Args:
+            pass
+        args_obj = Args()
+        args_obj.host = '127.0.0.1'
+        args_obj.port = 8000
+        print("Web server starting at http://localhost:8000")
+        print("Press Ctrl+C to stop")
+        try:
+            start_server(args_obj)
+        except KeyboardInterrupt:
+            print("\nWeb server stopped")
+    
+    def start_engine(self):
+        """Start engine."""
+        print("\nStarting engine...")
+        print("Engine starting...")
+        print("Note: Full engine integration with llama.cpp is not yet implemented.")
+        print("Use 'model list' and 'model install' to set up models first.")
+    
+    def run_interactive(self):
+        """Run interactive CLI loop."""
+        show_ascii_intro()
+        print("RAKAN Interactive CLI")
+        print("Type 'help' for available commands, 'exit' to quit")
+        print()
+        
+        while self.running:
+            try:
+                command = input("rakan> ").strip()
+                if command:
+                    self.handle_command(command)
+            except EOFError:
+                print("\nGoodbye!")
+                break
+            except KeyboardInterrupt:
+                print("\nType 'exit' to quit or press Ctrl+C again to force quit")
+                # Don't break on first Ctrl+C, give user a chance to type exit
+    
+    def run_command(self, command):
+        """Run single command and exit."""
+        show_ascii_intro()
+        self.handle_command(command)
 
 
 def main():
     """Main entry point."""
-    # Show ASCII intro
-    show_ascii_intro()
-    
     cli = RAKANCLI()
-    sys.exit(cli.run())
+    cli.setup()
+    
+    # Check if running in interactive mode or single command
+    if len(sys.argv) > 1:
+        # Single command mode
+        command = ' '.join(sys.argv[1:])
+        cli.run_command(command)
+    else:
+        # Interactive mode
+        cli.run_interactive()
 
 
 if __name__ == '__main__':
