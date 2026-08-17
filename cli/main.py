@@ -77,6 +77,7 @@ class RAKANCLI:
         print("  agent         - Agent operations")
         print("  server        - Start API server")
         print("  status        - Show system status")
+        print("  uninstall      - Uninstall RAKAN")
         print("  exit          - Exit RAKAN")
         print("=" * 60 + "\n")
     
@@ -187,6 +188,9 @@ class RAKANCLI:
             elif command == 'engine':
                 self.start_engine()
             
+            elif command == 'uninstall':
+                self.uninstall_rakan()
+            
             else:
                 print(f"Unknown command: {command}")
                 print("Type 'help' for available commands")
@@ -253,6 +257,73 @@ class RAKANCLI:
         print("Engine starting...")
         print("Note: Full engine integration with llama.cpp is not yet implemented.")
         print("Use 'model list' and 'model install' to set up models first.")
+    
+    def uninstall_rakan(self):
+        """Uninstall RAKAN from system."""
+        import platform as pf
+        import os
+        import shutil
+        
+        print("=" * 60)
+        print("RAKAN Uninstallation")
+        print("=" * 60)
+        print()
+        
+        print("This will remove:")
+        print("  - Wrapper file")
+        print("  - Data directory")
+        print("  - PATH entry (manual instructions)")
+        print()
+        
+        try:
+            response = input("Do you want to proceed? (y/n): ").strip().lower()
+            if response != 'y':
+                print("Uninstallation cancelled.")
+                return
+        except (EOFError, KeyboardInterrupt):
+            print("\nUninstallation cancelled.")
+            return
+        
+        print()
+        print("Starting uninstallation...")
+        print()
+        
+        # Remove wrapper file
+        system = pf.system()
+        if system == "Windows":
+            user_profile = os.path.expanduser("~")
+            wrapper_file = os.path.join(user_profile, "rakan.bat")
+        else:
+            wrapper_file = os.path.join(os.path.expanduser("~/.local/bin"), "rakan")
+        
+        try:
+            if os.path.exists(wrapper_file):
+                os.remove(wrapper_file)
+                print(f"[OK] Removed wrapper: {wrapper_file}")
+            else:
+                print(f"[MISSING] Wrapper not found: {wrapper_file}")
+        except Exception as e:
+            print(f"[ERROR] Failed to remove wrapper: {e}")
+        
+        # Remove data directory
+        data_dir = os.path.expanduser("~/.rakan")
+        try:
+            if os.path.exists(data_dir):
+                shutil.rmtree(data_dir)
+                print(f"[OK] Removed data directory: {data_dir}")
+            else:
+                print(f"[MISSING] Data directory not found: {data_dir}")
+        except Exception as e:
+            print(f"[ERROR] Failed to remove data directory: {e}")
+        
+        print()
+        print("=" * 60)
+        print("Uninstallation Complete!")
+        print("=" * 60)
+        print()
+        print("Please manually remove PATH entry if needed.")
+        print("Thank you for using RAKAN!")
+        print()
     
     def run_interactive(self):
         """Run interactive CLI loop."""
