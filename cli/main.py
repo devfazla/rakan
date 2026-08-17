@@ -592,6 +592,12 @@ For more information, see: https://github.com/devfazla/rakan
                 import shutil
                 import time
                 try:
+                    # Remove installation marker first
+                    marker_file = os.path.join(data_dir, ".installation_info")
+                    if os.path.exists(marker_file):
+                        os.remove(marker_file)
+                        print(f"[OK] Removed installation marker: {marker_file}")
+                    
                     shutil.rmtree(data_dir)
                     print(f"[OK] Removed data directory: {data_dir}")
                 except OSError as e:

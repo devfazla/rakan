@@ -12,8 +12,56 @@ import subprocess
 from pathlib import Path
 
 
+def check_existing_installation():
+    """Check if RAKAN is already installed and return installation path."""
+    import os
+    import platform
+    
+    # Check for installation marker first
+    data_dir = os.path.expanduser("~/.rakan")
+    marker_file = os.path.join(data_dir, ".installation_info")
+    if os.path.exists(marker_file):
+        try:
+            with open(marker_file, 'r') as f:
+                install_path = f.read().strip()
+                # Check if this is a valid directory
+                if os.path.exists(install_path):
+                    return install_path
+                else:
+                    # Marker exists but directory doesn't - corrupted installation
+                    return f"Corrupted installation marker: {install_path}"
+        except:
+            pass
+    
+    # Check for wrapper file as fallback
+    user_profile = os.path.expanduser("~")
+    if platform.system() == "Windows":
+        wrapper_file = os.path.join(user_profile, "rakan.bat")
+    else:
+        wrapper_file = os.path.join(os.path.expanduser("~/.local/bin"), "rakan")
+    
+    if os.path.exists(wrapper_file):
+        return f"Wrapper file exists at: {wrapper_file}"
+    
+    # Only check for data directory if it contains actual RAKAN data
+    if os.path.exists(data_dir):
+        # Check if it looks like a RAKAN data directory
+        has_rakan_data = (
+            os.path.exists(os.path.join(data_dir, "models")) or
+            os.path.exists(os.path.join(data_dir, "logs")) or
+            os.path.exists(os.path.join(data_dir, "config"))
+        )
+        if has_rakan_data:
+            return f"RAKAN data directory exists: {data_dir}"
+    
+    return None
+
+
 def main():
     """Main installation function."""
+    # Check for --force flag
+    force_mode = '--force' in sys.argv or '-f' in sys.argv
+    
     print("=" * 50)
     print("RAKAN Installation Script")
     print("=" * 50)
@@ -40,16 +88,146 @@ def main():
     print(f"Detected platform: {system}")
     print()
     
-    # Check if rakan is already in PATH
-    if shutil.which("rakan"):
-        print("RAKAN is already in PATH")
-        print(f"Location: {shutil.which('rakan')}")
+    # Check for existing installation
+    existing_installation = check_existing_installation()
+    
+    if existing_installation and not force_mode:
+        print("=" * 50)
+        print("Existing Installation Detected")
+        print("=" * 50)
+        print()
+        print("RAKAN appears to be already installed:")
+        print(f"  Current RAKAN directory: {rakan_dir}")
+        print(f"  Previous installation: {existing_installation}")
         print()
         
-        choice = input("Do you want to reinstall RAKAN? (y/n): ").strip().lower()
-        if choice != 'y':
-            print("Installation cancelled")
+        # Handle different types of existing installation info
+        if "Corrupted installation marker:" in existing_installation:
+            print("Found corrupted installation marker.")
+            print("The previous installation directory no longer exists.")
+            print()
+            print("Options:")
+            print("  1. Clean up and reinstall this location")
+            print("  2. Cancel and investigate manually")
+            print()
+            
+            try:
+                choice = input("Your choice (1/2): ").strip()
+            except (EOFError, KeyboardInterrupt):
+                print("\nInstallation cancelled.")
+                return 0
+            
+            if choice == '1':
+                print("Cleaning up corrupted installation marker...")
+                try:
+                    os.remove(marker_file)
+                    print("[OK] Removed corrupted marker")
+                except:
+                    print("[WARNING] Could not remove marker")
+                print("Proceeding with installation...")
+            elif choice == '2':
+                print("Installation cancelled.")
+                print(f"Please check: {existing_installation}")
+                return 0
+            else:
+                print("Invalid choice. Installation cancelled.")
+                return 0
+        elif "Wrapper file exists at:" in existing_installation:
+            print("Found existing wrapper file.")
+            print("This may indicate a previous installation.")
+            print()
+            print("Options:")
+            print("  1. Cancel and investigate existing installation")
+            print("  2. Reinstall this location (overwrites existing)")
+            print("  3. Uninstall existing and install new")
+            print()
+            
+            try:
+                choice = input("Your choice (1/2/3): ").strip()
+            except (EOFError, KeyboardInterrupt):
+                print("\nInstallation cancelled.")
+                return 0
+            
+            if choice == '1':
+                print("Installation cancelled.")
+                print(f"Please check: {existing_installation}")
+                return 0
+            elif choice == '2':
+                print("Proceeding with reinstallation...")
+                print("This will overwrite the existing installation.")
+            elif choice == '3':
+                print("Please uninstall existing installation first:")
+                print("  rakan uninstall")
+                print("Then run this installation again.")
+                return 0
+            else:
+                print("Invalid choice. Installation cancelled.")
+                return 0
+        elif "RAKAN data directory exists:" in existing_installation:
+            print("Found existing RAKAN data directory.")
+            print("This contains your models, logs, and configuration.")
+            print()
+            print("This is not a duplicate installation - the data directory")
+            print("is shared across installations. This is safe to continue.")
+            print()
+            print("Proceeding with installation...")
+            print("Your existing data will be preserved.")
+        elif existing_installation == str(rakan_dir):
+            print("This is the same installation directory.")
+            print("No installation needed.")
+            print()
+            print("To reinstall, first uninstall with:")
+            print("  rakan uninstall")
+            print("Or use --force flag to reinstall:")
+            print("  python install.py --force")
             return 0
+        else:
+            print("Different installation directory detected.")
+            print()
+            print("Options:")
+            print("  1. Cancel and use existing installation")
+            print("  2. Reinstall this location (overwrites existing)")
+            print("  3. Uninstall existing and install new")
+            print()
+            
+            try:
+                choice = input("Your choice (1/2/3): ").strip()
+            except (EOFError, KeyboardInterrupt):
+                print("\nInstallation cancelled.")
+                return 0
+            
+            if choice == '1':
+                print("Installation cancelled.")
+                print(f"Using existing installation at: {existing_installation}")
+                return 0
+            elif choice == '2':
+                print("Proceeding with reinstallation...")
+                print("This will overwrite the existing installation.")
+            elif choice == '3':
+                print("Please uninstall existing installation first:")
+                print("  rakan uninstall")
+                print("Then run this installation again.")
+                return 0
+            else:
+                print("Invalid choice. Installation cancelled.")
+                return 0
+    elif existing_installation and force_mode:
+        print("Force mode enabled - proceeding with reinstallation")
+        print(f"Previous installation: {existing_installation}")
+        print()
+    
+    # Check if rakan is already in PATH
+    if shutil.which("rakan"):
+        rakan_path = shutil.which('rakan')
+        print("RAKAN command is already in PATH")
+        print(f"Location: {rakan_path}")
+        print()
+        
+        if not force_mode:
+            choice = input("Do you want to reinstall RAKAN? (y/n): ").strip().lower()
+            if choice != 'y':
+                print("Installation cancelled.")
+                return 0
     
     # Platform-specific installation
     if system == "Windows":
@@ -91,6 +269,16 @@ def install_windows(rakan_dir):
             f.write(f'python "{rakan_dir}\\cli\\main.py" %*\n')
         
         print("Wrapper file created successfully")
+        print()
+        
+        # Create installation marker
+        data_dir = os.path.expanduser("~/.rakan")
+        os.makedirs(data_dir, exist_ok=True)
+        marker_file = os.path.join(data_dir, ".installation_info")
+        with open(marker_file, 'w') as f:
+            f.write(str(rakan_dir))
+        print(f"Installation marker created: {marker_file}")
+        print(f"Installation path: {rakan_dir}")
         print()
         
         # Add to PATH
@@ -141,6 +329,16 @@ def install_unix(rakan_dir):
         os.chmod(wrapper_file, 0o755)
         
         print("Wrapper file created successfully")
+        print()
+        
+        # Create installation marker
+        data_dir = os.path.expanduser("~/.rakan")
+        os.makedirs(data_dir, exist_ok=True)
+        marker_file = os.path.join(data_dir, ".installation_info")
+        with open(marker_file, 'w') as f:
+            f.write(str(rakan_dir))
+        print(f"Installation marker created: {marker_file}")
+        print(f"Installation path: {rakan_dir}")
         print()
         
         # Check if ~/.local/bin is in PATH
