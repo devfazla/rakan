@@ -10,7 +10,7 @@ The installer automates the setup of the Local AI platform, handling system dete
 - Minimal external dependencies
 - Cross-platform compatibility
 - Silent installation support for automation
-- Rollback capability on frakanlure
+- Rollback capability on failure
 
 ## Installation Process
 
@@ -25,7 +25,7 @@ The installer automates the setup of the Local AI platform, handling system dete
    - CPU architecture (x86_64, ARM64)
    - CPU cores and capabilities
    - Total RAM
-   - Avrakanlable disk space
+   - Available disk space
    - GPU detection (optional, for future enhancements)
 
 3. Existing Installation Detection
@@ -39,7 +39,7 @@ The installer automates the setup of the Local AI platform, handling system dete
 ```
 1. Python Detection
    - Check Python 3.8+ installation
-   - Verify pip avrakanlability
+   - Verify pip availability
    - Check virtual environment support
 
 2. System Dependencies
@@ -63,11 +63,11 @@ The installer automates the setup of the Local AI platform, handling system dete
 ### Phase 3: Directory Setup
 ```
 1. Create Directory Structure
-   - Installation directory (user-selectable, default: ~/.local-rakan)
-   - Model directory (default: ~/.local-rakan/models)
-   - Configuration directory (default: ~/.config/local-rakan)
-   - Log directory (default: ~/.local-rakan/logs)
-   - Cache directory (default: ~/.local-rakan/cache)
+   - Installation directory (user-selectable, default: ~/.local-ai)
+   - Model directory (default: ~/.local-ai/models)
+   - Configuration directory (default: ~/.config/local-ai)
+   - Log directory (default: ~/.local-ai/logs)
+   - Cache directory (default: ~/.local-ai/cache)
 
 2. Permission Setup
    - Set appropriate directory permissions
@@ -78,7 +78,7 @@ The installer automates the setup of the Local AI platform, handling system dete
 ### Phase 4: llama.cpp Setup
 ```
 1. Installation Method Selection
-   - Prefer pre-built binaries if avrakanlable
+   - Prefer pre-built binaries if available
    - Fall back to source compilation
    - Respect user preference if specified
 
@@ -112,12 +112,12 @@ The installer automates the setup of the Local AI platform, handling system dete
 
 2. Model Selection
    - Show recommended models
-   - Show all avrakanlable models
+   - Show all available models
    - Allow custom GGUF URL input
    - Display file sizes and disk space requirements
 
 3. Model Download
-   - Check avrakanlable disk space
+   - Check available disk space
    - Download with progress indication
    - Verify checksum
    - Place in model directory
@@ -139,7 +139,7 @@ The installer automates the setup of the Local AI platform, handling system dete
    - Set performance parameters based on hardware
 
 2. User Configuration
-   - Generate ~/.config/local-rakan/config.yaml
+   - Generate ~/.config/local-ai/config.yaml
    - Set user preferences
    - Configure logging
    - Set permission defaults
@@ -171,7 +171,7 @@ The installer automates the setup of the Local AI platform, handling system dete
    - Test configuration loading
 
 3. Health Check
-   - Run rakan doctor
+   - Run ai doctor
    - Check system resources
    - Verify no conflicts
    - Generate installation report
@@ -186,7 +186,7 @@ The installer automates the setup of the Local AI platform, handling system dete
 
 2. Installation Report
    - Generate installation summary
-   - Log installation detrakanls
+   - Log installation details
    - Create rollback script if needed
 
 3. User Notification
@@ -219,8 +219,8 @@ while [[ $# -gt 0 ]]; do
   shift
 done
 
-# Mrakann installation function
-mrakann() {
+# Main installation function
+main() {
   log "Starting Local AI installation"
   
   detect_system
@@ -236,8 +236,8 @@ mrakann() {
   show_next_steps
 }
 
-# Run mrakann function
-mrakann
+# Run main function
+main
 ```
 
 ### Windows Installer (install.ps1)
@@ -251,8 +251,8 @@ param(
   [string]$Prefix
 )
 
-# Mrakann installation function
-function Mrakann {
+# Main installation function
+function Main {
   Write-Host "Starting Local AI installation"
   
   Detect-System
@@ -268,8 +268,8 @@ function Mrakann {
   Show-NextSteps
 }
 
-# Run mrakann function
-Mrakann
+# Run main function
+Main
 ```
 
 ## Detection Modules
@@ -300,7 +300,7 @@ def detect_hardware():
         'cpu_arch': platform.machine(),
         'cpu_cores': psutil.cpu_count(),
         'total_ram': psutil.virtual_memory().total,
-        'avrakanlable_disk': psutil.disk_usage('/').free,
+        'available_disk': psutil.disk_usage('/').free,
         'gpu': detect_gpu()
     }
 
@@ -350,13 +350,13 @@ def detect_gpu():
 
 ### Error Categories
 1. **System Errors**: Insufficient permissions, missing dependencies
-2. **Network Errors**: Download frakanlures, connectivity issues
+2. **Network Errors**: Download failures, connectivity issues
 3. **Hardware Errors**: Insufficient resources, incompatible hardware
 4. **Configuration Errors**: Invalid settings, corrupted files
 5. **User Errors**: Invalid input, cancellation
 
 ### Error Recovery
-- Automatic retry for transient frakanlures
+- Automatic retry for transient failures
 - Fallback mechanisms for downloads
 - Partial installation cleanup
 - Rollback to previous state
@@ -365,7 +365,7 @@ def detect_gpu():
 ## Logging
 
 ### Installation Logs
-- Location: ~/.local-rakan/logs/installation.log
+- Location: ~/.local-ai/logs/installation.log
 - Format: Timestamp, Level, Component, Message
 - Rotation: Keep last 5 installations
 - Debug mode for troubleshooting
@@ -385,7 +385,7 @@ def detect_gpu():
 - Man-in-the-middle attacks
 - Malicious model files
 - Privilege escalation
-- Supply chrakann attacks
+- Supply chain attacks
 
 ## Testing
 
@@ -401,7 +401,7 @@ def detect_gpu():
    - Test rollback
 
 3. **Error Handling Tests**
-   - Simulate network frakanlures
+   - Simulate network failures
    - Simulate insufficient disk space
    - Simulate permission errors
 
@@ -416,7 +416,7 @@ def detect_gpu():
 ```yaml
 # Installation options
 installation:
-  prefix: "~/.local-rakan"
+  prefix: "~/.local-ai"
   install_llama_cpp: true
   download_model: true
   default_model: "auto"
@@ -449,16 +449,16 @@ user:
 ### Quick Start Commands
 ```bash
 # Check system health
-rakan doctor
+ai doctor
 
 # Start chatting
-rakan chat
+ai chat
 
-# See avrakanlable models
-rakan model list
+# See available models
+ai model list
 
 # Get help
-rakan --help
+ai --help
 ```
 
 ## Troubleshooting
@@ -467,23 +467,23 @@ rakan --help
 1. **Python not found**: Install Python 3.8+
 2. **Insufficient disk space**: Free up space or choose smaller model
 3. **Network errors**: Check internet connection and proxy settings
-4. **Build frakanlures**: Install build dependencies
+4. **Build failures**: Install build dependencies
 5. **Permission errors**: Run with appropriate permissions
 
 ### Diagnostic Commands
 ```bash
 # Full diagnostics
-rakan doctor --detrakanled
+ai doctor --detailed
 
 # Check installation
-rakan config --validate
+ai config --validate
 
 # Test model
-rakan model info <model-name>
+ai model info <model-name>
 ```
 
 ## Future Enhancements
-- Docker contrakanner installation
+- Docker container installation
 - System package manager integration (apt, yum, brew)
 - Silent installation with configuration file
 - Unattended installation for enterprise deployment

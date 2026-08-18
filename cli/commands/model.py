@@ -50,7 +50,7 @@ def list_models(args):
                 print()
         else:
             print("  No models installed")
-            print("  Install models using: rakan model install <model-name>")
+            print("  Install models using: ai model install <model-name>")
             print()
     
     if not installed_only:
@@ -95,7 +95,7 @@ def install_model(args):
     if not model_info and not custom_url:
         logger.error(f"Model {model_name} not found in registry")
         print(f"Error: Model '{model_name}' not found in registry")
-        print("Use 'rakan model list' to see available models")
+        print("Use 'ai model list' to see available models")
         return 1
     
     # Show model information

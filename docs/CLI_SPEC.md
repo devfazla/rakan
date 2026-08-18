@@ -4,7 +4,7 @@
 The Local AI platform provides a command-line interface for all core functionality. This specification defines the commands, arguments, and behavior of the CLI.
 
 ## Design Principles
-- Commands follow a hierarchical structure: `rakan <category> <action>`
+- Commands follow a hierarchical structure: `ai <category> <action>`
 - Output is human-readable by default, machine-readable when requested
 - Error messages are clear and actionable
 - Commands are idempotent where possible
@@ -15,7 +15,7 @@ The Local AI platform provides a command-line interface for all core functionali
 
 ### Global Options
 ```
-rakan [global-options] <command> [command-options]
+ai [global-options] <command> [command-options]
 
 Global Options:
   --config <path>     Path to configuration file
@@ -28,15 +28,15 @@ Global Options:
 
 ## Core Commands
 
-### rakan doctor
+### ai doctor
 Check system health and configuration.
 
 ```
-rakan doctor [options]
+ai doctor [options]
 
 Options:
   --fix               Attempt to fix detected issues automatically
-  --detrakanled          Show detrakanled diagnostic information
+  --detailed          Show detailed diagnostic information
 
 Output:
   - System information (OS, CPU, RAM, disk)
@@ -46,17 +46,17 @@ Output:
   - Performance recommendations
 ```
 
-### rakan model
+### ai model
 Manage AI models.
 
-#### rakan model list
-List installed and avrakanlable models.
+#### ai model list
+List installed and available models.
 
 ```
-rakan model list [options]
+ai model list [options]
 
 Options:
-  --avrakanlable         Show models avrakanlable for download
+  --available         Show models available for download
   --installed         Show only installed models (default)
   --json              Output in JSON format
 
@@ -69,11 +69,11 @@ Output:
   - RAM requirements
 ```
 
-#### rakan model install
+#### ai model install
 Download and install a model.
 
 ```
-rakan model install <model-name> [options]
+ai model install <model-name> [options]
 
 Options:
   --url <url>         Custom GGUF download URL
@@ -84,18 +84,18 @@ Arguments:
   model-name          Name from model registry or custom URL
 
 Process:
-  1. Check avrakanlable disk space
+  1. Check available disk space
   2. Download model file
   3. Verify checksum
   4. Add to registry
   5. Set as default if first model
 ```
 
-#### rakan model remove
+#### ai model remove
 Remove an installed model.
 
 ```
-rakan model remove <model-name> [options]
+ai model remove <model-name> [options]
 
 Options:
   --force             Skip confirmation
@@ -110,11 +110,11 @@ Process:
   4. Switch default model if needed
 ```
 
-#### rakan model use
+#### ai model use
 Select the active model.
 
 ```
-rakan model use <model-name>
+ai model use <model-name>
 
 Arguments:
   model-name          Name of model to activate
@@ -125,17 +125,17 @@ Process:
   3. Display confirmation
 ```
 
-#### rakan model info
-Show detrakanled information about a model.
+#### ai model info
+Show detailed information about a model.
 
 ```
-rakan model info <model-name>
+ai model info <model-name>
 
 Arguments:
   model-name          Name of model
 
 Output:
-  - Full model detrakanls
+  - Full model details
   - Installation status
   - File location
   - Checksum
@@ -143,11 +143,11 @@ Output:
   - Context length
 ```
 
-### rakan chat
+### ai chat
 Interactive chat with the AI.
 
 ```
-rakan chat [options]
+ai chat [options]
 
 Options:
   --model <name>      Use specific model (overrides default)
@@ -170,11 +170,11 @@ Interactive Mode:
     /exit            Exit chat
 ```
 
-### rakan agent
+### ai agent
 Run agent with project context.
 
 ```
-rakan agent [options] [task]
+ai agent [options] [task]
 
 Options:
   --project <path>    Project directory to work with
@@ -194,46 +194,46 @@ Process:
   5. Display results
 ```
 
-### rakan project
+### ai project
 Project management commands.
 
-#### rakan project init
+#### ai project init
 Initialize project for AI assistance.
 
 ```
-rakan project init [path] [options]
+ai project init [path] [options]
 
 Options:
   --template <name>   Use project template
   --force             Overwrite existing configuration
 
 Process:
-  1. Create .local-rakan directory
+  1. Create .local-ai directory
   2. Generate default instructions.md
   3. Generate default config.yaml
   4. Detect project type
   5. Add to project registry
 ```
 
-#### rakan project info
+#### ai project info
 Show project information.
 
 ```
-rakan project info [path]
+ai project info [path]
 
 Output:
   - Project type
   - Configuration status
-  - Avrakanlable instructions
+  - Available instructions
   - Git status
   - File statistics
 ```
 
-### rakan config
+### ai config
 Configuration management.
 
 ```
-rakan config [options] [key] [value]
+ai config [options] [key] [value]
 
 Options:
   --list              List all configuration
@@ -244,42 +244,19 @@ Options:
   --validate          Validate configuration
 
 Examples:
-  rakan config --list
-  rakan config --get model.default
-  rakan config --set model.default qwen2.5-coder-1.5b
+  ai config --list
+  ai config --get model.default
+  ai config --set model.default qwen2.5-coder-1.5b
 ```
 
-### rakan uninstall
-Uninstall RAKAN from system.
-
-```bash
-rakan uninstall [options]
-```
-
-**Options:**
-- `--force` - Skip confirmation prompt
-
-**Behavior:**
-- Removes wrapper file (rakan.bat or rakan)
-- Removes data directory (~/.rakan)
-- Removes PATH entry
-- Provides manual cleanup instructions if needed
-- Requires confirmation by default (y/n)
-
-**Examples:**
-```bash
-rakan uninstall           # Interactive uninstall with confirmation
-rakan uninstall --force   # Skip confirmation prompt
-```
-
-### rakan server
+### ai server
 Web server management.
 
-#### rakan server start
+#### ai server start
 Start the web interface server.
 
 ```
-rakan server start [options]
+ai server start [options]
 
 Options:
   --port <n>          Port to listen on (default: 8080)
@@ -288,17 +265,17 @@ Options:
   --debug             Enable debug mode
 
 Process:
-  1. Check port avrakanlability
+  1. Check port availability
   2. Start backend server
   3. Open browser if not disabled
   4. Display server URL
 ```
 
-#### rakan server stop
+#### ai server stop
 Stop the running web server.
 
 ```
-rakan server stop [options]
+ai server stop [options]
 
 Options:
   --force             Force shutdown
@@ -306,14 +283,14 @@ Options:
 Process:
   1. Connect to running server
   2. Send shutdown signal
-  3. Wrakant for graceful shutdown
+  3. Wait for graceful shutdown
 ```
 
-#### rakan server status
+#### ai server status
 Check server status.
 
 ```
-rakan server status
+ai server status
 
 Output:
   - Server running status
@@ -323,11 +300,11 @@ Output:
   - Active sessions
 ```
 
-### rakan version
+### ai version
 Show version information.
 
 ```
-rakan version
+ai version
 
 Output:
   - Application version
@@ -350,8 +327,8 @@ Output:
 ## Configuration Files
 Commands use configuration from:
 1. Command-line arguments (highest priority)
-2. User config file (`~/.config/local-rakan/config.yaml`)
-3. Project config (`.local-rakan/config.yaml`)
+2. User config file (`~/.config/local-ai/config.yaml`)
+3. Project config (`.local-ai/config.yaml`)
 4. Default config (`config/default.yaml`)
 
 ## Error Handling
@@ -376,7 +353,7 @@ The CLI should support tab completion for:
 - Warning messages: Yellow
 - Error messages: Red
 - Info messages: Blue
-- Code blocks: Monospace with syntax highlighting when avrakanlable
+- Code blocks: Monospace with syntax highlighting when available
 
 ## Progress Indicators
 Long-running operations show progress:
@@ -385,18 +362,18 @@ Installing model: [████████░░] 80% (2.3GB / 2.9GB)
 ```
 
 ## Streaming Output
-Commands that produce streaming output (like `rakan chat`) display:
+Commands that produce streaming output (like `ai chat`) display:
 - Real-time token generation
 - Cursor positioning for in-place updates
 - Ctrl+C handling for graceful interruption
 
 ## Logging
 Logs are written to:
-- `~/.local-rakan/logs/local-rakan.log` (user level)
-- `.local-rakan/logs/project.log` (project level)
+- `~/.local-ai/logs/local-ai.log` (user level)
+- `.local-ai/logs/project.log` (project level)
 
 Log levels:
-- DEBUG: Detrakanled diagnostic information
+- DEBUG: Detailed diagnostic information
 - INFO: General informational messages
 - WARN: Warning messages
 - ERROR: Error messages

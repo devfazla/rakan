@@ -38,46 +38,44 @@ RAKAN is a self-hosted AI development platform designed to run on modest hardwar
 
 ### Installation
 
-**Single Command Installation:**
+#### Option 1: One-Click Installation (Recommended)
+
 ```bash
-python install.py
+# Install RAKAN in one command
+pip install rakan
+
+# Or run the installer script
+python -c "import urllib.request; urllib.request.urlretrieve('https://raw.githubusercontent.com/devfazla/rakan/main/install.py', 'install.py'); exec(open('install.py').read())"
 ```
 
-This single command handles everything:
-- Checks Python installation
-- Installs all dependencies
-- Sets up the `rakan` command on your system
-- Creates necessary directories
-- Configures the environment
+#### Option 2: Manual Installation
 
-After installation, close and reopen your terminal, then run:
 ```bash
-rakan
+# Clone the repository
+git clone https://github.com/devfazla/rakan.git
+cd rakan
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Install in development mode
+pip install -e .
 ```
 
 ### Basic Usage
 
-**Interactive Mode (Default):**
 ```bash
-rakan
-```
-This starts an interactive CLI session where you can:
-- Type `help` for available commands
-- Use commands like `doctor`, `model list`, `chat`, etc.
-- Type `exit` to quit
+# Check system health
+rakan doctor
 
-**Direct Commands:**
-```bash
-rakan doctor              # Check system health
-rakan model list          # List available models
-rakan chat                # Start interactive chat
-rakan web                 # Start web server
-rakan agent               # Run agent
-```
+# List available models
+rakan model list
 
-**Start All Components:**
-```bash
-rakan start               # Start all RAKAN components
+# Start chatting
+rakan chat
+
+# Work with a project
+rakan agent --project ./my-project "Fix the bug in the login function"
 ```
 
 ## Architecture
@@ -111,13 +109,13 @@ See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for detailed architecture informatio
 
 ## Documentation
 
-- [User Manual](docs/USER_MANUAL.md) - Complete user guide with installation and usage
 - [Architecture](docs/ARCHITECTURE.md) - System architecture and design
 - [Roadmap](docs/ROADMAP.md) - Development phases and timeline
 - [CLI Specification](docs/CLI_SPEC.md) - Command-line interface details
 - [Agent Specification](docs/AGENT_SPEC.md) - Agent capabilities and tools
 - [Model Specification](docs/MODEL_SPEC.md) - Model management and registry
 - [Security](docs/SECURITY.md) - Security architecture and practices
+- [Installation Guide](docs/GUIDE.md) - Installation and setup instructions
 
 ## Current Status
 

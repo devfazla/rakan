@@ -1,10 +1,10 @@
-# Local AI Platform - Python Dependencies
-# Core dependencies for the Local AI platform
+# RAKAN - Python Dependencies
+# Core dependencies for RAKAN
 
 # Configuration management
 PyYAML>=6.0
 
-# Logging (optional enhancements)
+# Logging
 colorlog>=6.0  # For colored console output
 
 # Platform detection

@@ -59,44 +59,41 @@ RAKAN is a modular, portable, local-first AI coding assistant that runs on consu
 
 ## Installation
 
-### Single Command Installation
+### Option 1: One-Click Installation (Recommended)
 
-RAKAN has a single installer that handles everything:
+The easiest way to install RAKAN is with a single command:
 
 ```bash
-python install.py
+# Install RAKAN via pip
+pip install rakan
 ```
 
-This command will:
-- Check Python installation (requires 3.8+)
-- Install all required dependencies
-- Set up the `rakan` command on your system
-- Create necessary directories (~/.rakan)
-- Configure the environment
+This will:
+- Download and install RAKAN
+- Set up the directory structure
+- Configure the system
+- Add RAKAN to your PATH
+- Install default configuration files
 
-After installation:
-1. Close and reopen your terminal
-2. Run `rakan` to start the interactive CLI
+### Option 2: Installer Script
 
-### Manual Installation
+Run the installer script for a guided installation:
 
-If you prefer manual installation:
+```bash
+# Download and run installer
+python -c "import urllib.request; urllib.request.urlretrieve('https://raw.githubusercontent.com/devfazla/rakan/main/install.py', 'install.py'); exec(open('install.py').read())"
+```
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/devfazla/rakan.git
-   cd rakan
-   ```
+The installer will:
+- Check system compatibility
+- Install dependencies
+- Configure directories
+- Download configuration files
+- Set up system PATH
+- Install default model
+- Verify installation
 
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. Run RAKAN directly:
-   ```bash
-   python cli/main.py
-   ```
+### Option 3: Manual Installation
 
 #### Prerequisites
 
@@ -116,21 +113,14 @@ If you prefer manual installation:
    pip install -r requirements.txt
    ```
 
-3. Run RAKAN:
+3. Install in development mode:
    ```bash
-   python cli/main.py --help
+   pip install -e .
    ```
 
-4. (Optional) Create an alias for easier access:
+4. Verify installation:
    ```bash
-   # Add to your shell configuration (~/.bashrc, ~/.zshrc, etc.)
-   alias rakan='python /path/to/rakan/cli/main.py'
-   ```
-   ```
-
-4. (Optional) Install optional dependencies for web UI:
-   ```bash
-   pip install fastapi uvicorn websockets
+   rakan doctor
    ```
 
 ---
@@ -194,115 +184,145 @@ agent:
 
 ## Getting Started
 
-### Interactive CLI Mode
+### First Steps
 
-The default way to use RAKAN is through the interactive CLI:
+1. **Check System Health**
+   ```bash
+   rakan doctor
+   ```
+
+2. **List Available Models**
+   ```bash
+   rakan model list
+   ```
+
+3. **Install a Model**
+   ```bash
+   rakan model install qwen2.5-coder-1.5b-instruct
+   ```
+
+4. **Select Active Model**
+   ```bash
+   rakan model use qwen2.5-coder-1.5b-instruct
+   ```
+
+5. **Start Chat**
+   ```bash
+   rakan chat
+   ```
+
+### Quick Test
+
+Test your installation with a simple chat session:
 
 ```bash
-rakan
-```
-
-This starts an interactive session where you can type commands directly:
-
-```
-rakan> help              # Show available commands
-rakan> doctor           # Check system health
-rakan> model list       # List available models
-rakan> chat             # Start chat
-rakan> exit             # Exit RAKAN
-```
-
-### Direct Commands
-
-You can also run RAKAN commands directly:
-
-```bash
-rakan doctor
-rakan model list
 rakan chat
-rakan web
-rakan agent
 ```
 
-### Quick Start Commands
-
-```bash
-# Check system health
-rakan doctor
-
-# List available models
-rakan model list
-
-# Install a model
-rakan model install qwen2.5-coder-1.5b-instruct
-
-# Select active model
-rakan model use qwen2.5-coder-1.5b-instruct
-
-# Start chat
-rakan chat
+Then try:
+```
+You: Hello! Can you help me write a Python function?
+RAKAN: Of course! What kind of function would you like me to help you with?
 ```
 
 ---
 
 ## CLI Commands
 
-### Interactive Mode
+### System Commands
 
-When you run `rakan` without arguments, you enter interactive mode:
-
-```
-rakan> help
-rakan> doctor
-rakan> model list
-rakan> chat
-rakan> exit
-```
-
-### Available Commands
-
-**System Commands:**
-- `help` - Show available commands
-- `start` - Start all RAKAN components
-- `cli` - Already in CLI mode
-- `web` - Start web server
-- `engine` - Start inference engine
-- `doctor` - Check system health
-- `status` - Show system status
-- `exit` - Exit RAKAN
-
-**Model Commands:**
-- `model list` - List available models
-- `model install <name>` - Install a model
-- `model use <name>` - Select active model
-- `model info <name>` - Show model information
-
-**Chat Commands:**
-- `chat` - Start interactive chat
-
-**Project Commands:**
-- `project context` - Show project context
-- `project init` - Initialize project
-
-**Agent Commands:**
-- `agent` - Run agent in interactive mode
-
-**Server Commands:**
-- `server` - Start API server
-
-### Direct Command Usage
-
-You can also run commands directly without entering interactive mode:
+#### `rakan doctor`
+Check system health and configuration.
 
 ```bash
 rakan doctor
-rakan model list
-rakan chat
-rakan web
-rakan agent
+rakan doctor --detailed
+rakan doctor --fix
 ```
 
-## Model Management
+### Model Commands
+
+#### `rakan model list`
+List available and installed models.
+
+```bash
+rakan model list
+rakan model list --available
+rakan model list --installed
+```
+
+#### `rakan model install`
+Download and install a model.
+
+```bash
+rakan model install qwen2.5-coder-1.5b-instruct
+```
+
+#### `rakan model remove`
+Remove an installed model.
+
+```bash
+rakan model remove qwen2.5-coder-1.5b-instruct
+```
+
+#### `rakan model use`
+Select active model.
+
+```bash
+rakan model use qwen2.5-coder-1.5b-instruct
+```
+
+#### `rakan model info`
+Show detailed information about a model.
+
+```bash
+rakan model info qwen2.5-coder-1.5b-instruct
+```
+
+### Chat Commands
+
+#### `rakan chat`
+Start interactive chat session.
+
+```bash
+rakan chat
+rakan chat --model qwen2.5-coder-3b-instruct
+rakan chat --project ./my-project
+rakan chat --session my-session
+rakan chat --temperature 0.8
+```
+
+### Project Commands
+
+#### `rakan project context`
+Show project context information.
+
+```bash
+rakan project context
+rakan project context --directory ./my-project
+rakan project context --build-context --query "database"
+```
+
+#### `rakan project init`
+Initialize project for AI understanding.
+
+```bash
+rakan project init
+rakan project init --directory ./my-project
+rakan project init --force
+```
+
+### Agent Commands
+
+#### `rakan agent run`
+Run agent in interactive mode.
+
+```bash
+rakan agent run
+rakan agent run --mode interactive
+rakan agent run --mode single --task "Fix the bug"
+rakan agent run --auto-approve
+```
 
 #### `rakan agent permissions`
 Show permission rules.
@@ -347,22 +367,7 @@ Access the web interface at `http://localhost:8000`
 - Real-time chat with AI assistant
 - Message history
 - Auto-scroll to latest messages
-## Web Interface
-
-### Starting the Web Interface
-
-```bash
-rakan web
-```
-
-This starts the web server at http://localhost:8000
-
-### Web Interface Features
-
-#### Chat Interface
-- Real-time chat with AI assistant
-- Message history
-- Auto-scroll to latest messages
+- Send with Enter, new line with Shift+Enter
 
 #### Model Selection
 - Dropdown to select active model
@@ -388,6 +393,53 @@ This starts the web server at http://localhost:8000
 - Light theme option
 - Theme toggle button
 
+### API Endpoints
+
+#### Health Check
+```
+GET /api/v1/health
+```
+
+#### Agent Execution
+```
+POST /api/v1/agent
+Content-Type: application/json
+
+{
+  "message": "Your task here",
+  "context": {},
+  "auto_approve": false
+}
+```
+
+#### Model List
+```
+GET /api/v1/models
+```
+
+#### Chat
+```
+POST /api/v1/chat
+Content-Type: application/json
+
+{
+  "message": "Your message",
+  "model": "qwen2.5-coder-1.5b-instruct",
+  "session_id": "optional-session-id",
+  "temperature": 0.7,
+  "max_tokens": 1024
+}
+```
+
+#### Session Management
+```
+GET /api/v1/sessions
+GET /api/v1/sessions/{session_id}
+DELETE /api/v1/sessions/{session_id}
+```
+
+---
+
 ## Model Management
 
 ### Available Models
@@ -410,22 +462,7 @@ This starts the web server at http://localhost:8000
 
 #### Installing a Model
 ```bash
-rakan> model install qwen2.5-coder-1.5b-instruct
-```
-
-#### Checking Installation Status
-```bash
-rakan> model list
-```
-
-#### Switching Models
-```bash
-rakan> model use qwen2.5-coder-3b-instruct
-```
-
-#### Removing a Model
-```bash
-rakan> model remove qwen2.5-coder-1.5b-instruct
+rakan model install qwen2.5-coder-1.5b-instruct
 ```
 
 #### Checking Installation Status
@@ -471,7 +508,7 @@ rakan project context --build-context --query "authentication"
 rakan project init --directory ./my-project
 ```
 
-This creates `.local-ai/instructions.md` where you can provide project-specific guidance.
+This creates `.rakan/instructions.md` where you can provide project-specific guidance.
 
 ---
 
@@ -747,53 +784,6 @@ Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
 - Modern web interface
 - Cross-platform installer
 - Comprehensive testing
-
----
-
-## Uninstallation
-
-### Uninstall RAKAN
-
-To uninstall RAKAN from your system:
-
-```bash
-rakan uninstall
-```
-
-This will:
-- Show what will be removed
-- Ask for confirmation (y/n)
-- Remove the wrapper file
-- Remove the data directory (~/.rakan)
-- Remove PATH entries
-- Provide manual cleanup instructions if needed
-
-**Force uninstall (skip confirmation):**
-```bash
-rakan uninstall --force
-```
-
-**What gets removed:**
-- Wrapper file (rakan.bat on Windows, rakan on Linux/macOS)
-- Data directory (~/.rakan)
-- PATH entries
-- Models and configuration
-
-**Manual cleanup (if needed):**
-
-**Windows:**
-1. Delete wrapper file: `C:\Users\YourName\rakan.bat`
-2. Remove from PATH:
-   - Press Win+R, type "sysdm.cpl"
-   - Go to Advanced tab, click Environment Variables
-   - Under User variables, find PATH and click Edit
-   - Remove your user directory from the list
-3. Delete data directory: `C:\Users\YourName\.rakan`
-
-**Linux/macOS:**
-1. Delete wrapper file: `~/.local/bin/rakan`
-2. Remove from shell config (~/.bashrc, ~/.zshrc, etc.)
-3. Delete data directory: `~/.rakan`
 
 ---
 

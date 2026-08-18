@@ -22,7 +22,7 @@ This roadmap outlines the development phases for building a modular, portable, l
 - Configuration system setup
 - CLI skeleton
 - Basic logging
-- `rakan doctor` command
+- `ai doctor` command
 - Test infrastructure
 
 **Next Steps**:
@@ -58,7 +58,7 @@ This roadmap outlines the development phases for building a modular, portable, l
 - llama.cpp provider implementation
 - Streaming output support
 - Conversation/session management
-- `rakan chat` command
+- `ai chat` command
 - Basic prompt construction
 
 **Deliverables**:

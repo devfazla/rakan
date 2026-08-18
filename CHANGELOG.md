@@ -31,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configuration system implementation
 - Basic logging infrastructure
 - CLI skeleton with basic structure
-- `rakan doctor` command for system diagnostics
+- `ai doctor` command for system diagnostics
 - Basic test infrastructure
 
 ## [0.1.0] - Not Yet Released
@@ -41,7 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configuration system
 - Logging infrastructure
 - CLI skeleton
-- `rakan doctor` command
+- `ai doctor` command
 
 ### Phase 2 - Model System
 - Model registry
@@ -54,7 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Provider abstraction
 - llama.cpp provider
 - Streaming output
-- `rakan chat` command
+- `ai chat` command
 
 ### Phase 4 - Project Context
 - Project detection

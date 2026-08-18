@@ -11,6 +11,7 @@ from typing import Dict, Any, List
 import psutil
 
 from agent.core import get_logger, get_config_manager
+from cli.utils import terminal
 
 
 class SystemDoctor:
@@ -312,66 +313,54 @@ class SystemDoctor:
     
     def print_report(self, results: Dict[str, Any], detailed: bool = False):
         """Print formatted diagnostic report."""
-        print("\n" + "="*60)
-        print("LOCAL AI SYSTEM HEALTH REPORT")
-        print("="*60 + "\n")
+        terminal.print_header("RAKAN SYSTEM HEALTH REPORT")
         
         # System Information
-        print("SYSTEM INFORMATION:")
-        print("-" * 40)
+        terminal.print_section("SYSTEM INFORMATION")
         sys_info = results['system_info']
-        print(f"  OS:              {sys_info['os']} {sys_info['os_release']}")
-        print(f"  Architecture:    {sys_info['architecture']}")
-        print(f"  Python:          {sys_info['python_version']}")
-        print(f"  CPU Cores:       {sys_info['cpu_cores']}")
-        print(f"  Total Memory:    {sys_info['total_memory_gb']} GB")
-        print(f"  Available Memory: {sys_info['available_memory_gb']} GB")
-        print()
+        terminal.print_key_value("OS", f"{sys_info['os']} {sys_info['os_release']}")
+        terminal.print_key_value("Architecture", sys_info['architecture'])
+        terminal.print_key_value("Python", sys_info['python_version'])
+        terminal.print_key_value("CPU Cores", str(sys_info['cpu_cores']))
+        terminal.print_key_value("Total Memory", f"{sys_info['total_memory_gb']} GB")
+        terminal.print_key_value("Available Memory", f"{sys_info['available_memory_gb']} GB")
         
         # Configuration Status
-        print("CONFIGURATION STATUS:")
-        print("-" * 40)
+        terminal.print_section("CONFIGURATION STATUS")
         config = results['configuration']
-        print(f"  Config Directory:  {'OK' if config['config_dir_exists'] else 'MISSING'}")
-        print(f"  Default Config:    {'OK' if config['default_config_exists'] else 'MISSING'}")
-        print(f"  Models Config:     {'OK' if config['models_config_exists'] else 'MISSING'}")
-        print(f"  Permissions Config: {'OK' if config['permissions_config_exists'] else 'MISSING'}")
-        print(f"  Config Valid:      {'YES' if config['config_valid'] else 'NO'}")
-        print()
+        terminal.print_key_value("Config Directory", "OK" if config['config_dir_exists'] else "MISSING")
+        terminal.print_key_value("Default Config", "OK" if config['default_config_exists'] else "MISSING")
+        terminal.print_key_value("Models Config", "OK" if config['models_config_exists'] else "MISSING")
+        terminal.print_key_value("Permissions Config", "OK" if config['permissions_config_exists'] else "MISSING")
+        terminal.print_key_value("Config Valid", "YES" if config['config_valid'] else "NO")
         
         # Dependency Status
-        print("DEPENDENCY STATUS:")
-        print("-" * 40)
+        terminal.print_section("DEPENDENCY STATUS")
         deps = results['dependencies']
-        print(f"  Python Version:   {'OK' if deps['python_ok'] else 'NOT OK'}")
-        print(f"  Required Packages: {len(deps['missing_packages'])} missing")
-        print(f"  Recommended Packages: {len(deps['recommended_packages'])} missing")
+        terminal.print_key_value("Python Version", "OK" if deps['python_ok'] else "NOT OK")
+        terminal.print_key_value("Required Packages", f"{len(deps['missing_packages'])} missing")
+        terminal.print_key_value("Recommended Packages", f"{len(deps['recommended_packages'])} missing")
         if deps['missing_packages']:
-            print(f"  Missing: {', '.join(deps['missing_packages'])}")
-        print()
+            terminal.print_key_value("Missing", ', '.join(deps['missing_packages']))
         
         # Resource Status
-        print("RESOURCE STATUS:")
-        print("-" * 40)
+        terminal.print_section("RESOURCE STATUS")
         disk = results['disk_space']
         memory = results['memory']
-        print(f"  Disk Space:       {disk['available_gb']} GB available")
-        print(f"  Memory:           {memory['available_gb']} GB available")
-        print(f"  Recommended Models: {', '.join(memory['recommended_for_models']) if memory['recommended_for_models'] else 'None'}")
-        print()
+        terminal.print_key_value("Disk Space", f"{disk['available_gb']} GB available")
+        terminal.print_key_value("Memory", f"{memory['available_gb']} GB available")
+        terminal.print_key_value("Recommended Models", ', '.join(memory['recommended_for_models']) if memory['recommended_for_models'] else 'None')
         
         # Model Status
-        print("MODEL STATUS:")
-        print("-" * 40)
+        terminal.print_section("MODEL STATUS")
         models = results['models']
-        print(f"  Model Directory:  {'OK' if models['model_dir_exists'] else 'MISSING'}")
-        print(f"  Installed Models: {len(models['installed_models'])}")
-        print(f"  Default Model:    {'SET' if models['default_model_set'] else 'NOT SET'}")
+        terminal.print_key_value("Model Directory", "OK" if models['model_dir_exists'] else "MISSING")
+        terminal.print_key_value("Installed Models", str(len(models['installed_models'])))
+        terminal.print_key_value("Default Model", "SET" if models['default_model_set'] else "NOT SET")
         if models['installed_models']:
-            print("  Installed:")
+            terminal.print_subsection("Installed")
             for model in models['installed_models']:
-                print(f"    - {model}")
-        print()
+                terminal.print_list_item(model)
         
         # Issues and Warnings
         if results['issues']:
